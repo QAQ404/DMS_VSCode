@@ -8,4 +8,8 @@ const userLoginService = (loginData) => {
     return request.post("/user/login", params);
 }
 
-export { userLoginService }
+const userExitService = ()=>{
+    return request.get('/user/exit')
+}
+
+export { userLoginService ,userExitService}

@@ -39,7 +39,7 @@ instance.interceptors.response.use(
         //判断响应状态码，如果为401则证明未登录
         if(err.response.status===401){
             ElMessage.error('请先登录');
-            router.push('/');
+            router.push('/login');
         }
         else {
             ElMessage.error('服务异常');

@@ -6,7 +6,8 @@ import LayoutVue from '@/views/Layout.vue'
 const routers = [
     { path: '/login', component: LoginVue },
     {
-        path: '/', component: LayoutVue, redirect: '/login',
+        path: '/', component: LayoutVue,
+        // redirect: '/login',
         children:[
             
         ]

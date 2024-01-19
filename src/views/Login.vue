@@ -12,11 +12,13 @@ import { userLoginService } from '@/api/user.js'
 import {useTokenStore} from '@/stores/token.js';
 const tokemStore = useTokenStore();
 
+import router from '@/routers'
+
 const login = async () => {
     let result = await userLoginService(user.value);
     ElMessage.success("登录成功");
     tokemStore.setToken(result.data);
-
+    router.push('/')
 }
 </script>
 

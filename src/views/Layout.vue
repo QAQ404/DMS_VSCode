@@ -1,11 +1,169 @@
 <script setup>
+import { UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import avatar from '@/assets/default.jpg'
+import { ref } from 'vue'
+
+import { useTokenStore } from '@/stores/token.js';
+const tokemStore = useTokenStore();
+
+import { userExitService } from '@/api/user.js'
+import router from '@/routers'
+
+//右上角头像的下拉菜单的选项响应
+const dropCommand = (command) => {
+    if (command === 'logout') { //推出登录
+        ElMessageBox.confirm(
+            '是否确认退出',
+            '退出登录',
+            {
+                confirmButtonText: '退出',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+        )
+            .then(async () => {
+                //后端退出
+                let result = await userExitService();
+                //清空pinia和token
+                tokemStore.removeToken();
+
+                ElMessage({
+                    type: 'success',
+                    message: '退出登录',
+                })
+                router.push('/login');
+            })
+            .catch(() => {
+                ElMessage({
+                    type: 'info',
+                    message: '取消退出',
+                })
+            })
+    } else {
+        //路由
+        router.push('/user/' + command);
+    }
+}
+
 
 </script>
 
 <template>
-Layout
+    <el-container class="layout">
+        <!-- 头部 -->
+        <el-header class="e-header">
+            <div class="header-in">
+                <el-space>
+                    <el-icon size="50">
+                        <School />
+                    </el-icon>
+                    <div>宿舍管理系统</div>
+                </el-space>
+            </div>
+            <div class="header-in">
+                <el-space :size="large">
+                    <div>欢迎</div>
+                    <el-dropdown placement="bottom-end" @command="dropCommand">
+                        <span class="e-avatar">
+                            <el-avatar :src="avatar" :size="35" />
+                        </span>
+                        <template #dropdown>
+                            <el-dropdown-menu class="user-select-none">
+                                <el-dropdown-item command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                </el-space>
+            </div>
+        </el-header>
+        <el-container>
+            <!-- 页面左边菜单栏 -->
+            <el-aside class="e-left-menu">
+                <el-menu active-text-color="#ffd04b" default-active="2" background-color="#545c64" text-color="#fff" router>
+                    <el-menu-item index="">
+                        <el-icon>
+                            <HomeFilled />
+                        </el-icon>
+                        <span>寝室管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="">
+                        <el-icon>
+                            <OfficeBuilding />
+                        </el-icon>
+                        <span>楼栋管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="">
+                        <el-icon>
+                            <UserFilled />
+                        </el-icon>
+                        <span>学生管理</span>
+                    </el-menu-item>
+                    <el-menu-item index="">
+                        <el-icon>
+                            <User />
+                        </el-icon>
+                        <span>宿管管理</span>
+                    </el-menu-item>
+                    <el-sub-menu>
+                        <template #title>
+                            <span>个人中心</span>
+                        </template>
+                        <el-menu-item index="">
+                            <el-icon>
+                                <Postcard />
+                            </el-icon>
+                            <span>基本资料</span>
+                        </el-menu-item>
+                    </el-sub-menu>
+                </el-menu>
+            </el-aside>
+            <!-- 页面主页内容 -->
+            <el-main style="background-color: #F2F6FC;padding: 7px;">
+                <router-view></router-view>
+            </el-main>
+        </el-container>
+    </el-container>
 </template>
 
 <style scoped>
+.layout {
+    height: 100vh;
+}
 
+.e-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    background-color: #909399;
+}
+
+.header-in {
+    display: flex;
+    align-items: center;
+}
+
+.e-avatar {
+    outline: none;
+}
+
+.e-left-menu {
+    background-color: #545c64;
+    width: 150px;
+    user-select: none;
+}
+
+.user-select-none {
+    user-select: none;
+}
+
+.el-sub-menu :deep(.el-sub-menu__icon-arrow) {
+    transform: rotate(-90deg) !important;
+}
+
+/*菜单展开箭头样式*/
+.el-sub-menu.is-opened> :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
+    transform: rotate(0deg) !important;
+}
 </style>
