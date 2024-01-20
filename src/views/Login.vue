@@ -3,22 +3,22 @@ import { ElMessage } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 
-const user = ref({
+const user = ref({  //输入框内容
     username: '',
     password: ''
 })
 
 import { userLoginService } from '@/api/user.js'
 import {useTokenStore} from '@/stores/token.js';
-const tokemStore = useTokenStore();
+const tokenStore = useTokenStore();
 
 import router from '@/routers'
 
-const login = async () => {
+const login = async () => { //登录按钮功能
     let result = await userLoginService(user.value);
     ElMessage.success("登录成功");
-    tokemStore.setToken(result.data);
-    router.push('/')
+    tokenStore.setToken(result.data);
+    router.push('/main')
 }
 </script>
 

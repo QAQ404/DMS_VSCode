@@ -1,6 +1,6 @@
 import request from '@/utils/request.js'
 
-const userLoginService = (loginData) => {
+export const userLoginService = (loginData) => {    /* 账号密码登录Post */
     const params = new URLSearchParams();
     for (let key in loginData) {
         params.append(key, loginData[key]);
@@ -8,8 +8,11 @@ const userLoginService = (loginData) => {
     return request.post("/user/login", params);
 }
 
-const userExitService = ()=>{
+export const userExitService = ()=>{    /* 退出登录Get */
     return request.get('/user/exit')
 }
 
-export { userLoginService ,userExitService}
+export const userGetInfoService = ()=>{ /* 获取账号基本信息Get */
+    return request.get('/user/userInfo')
+}
+

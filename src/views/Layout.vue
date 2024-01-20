@@ -1,5 +1,5 @@
 <script setup>
-import { UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User } from '@element-plus/icons-vue'
+import { UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import avatar from '@/assets/default.jpg'
 import { ref } from 'vue'
@@ -7,7 +7,7 @@ import { ref } from 'vue'
 import { useTokenStore } from '@/stores/token.js';
 const tokemStore = useTokenStore();
 
-import { userExitService } from '@/api/user.js'
+import { userExitService, userGetInfoService } from '@/api/user.js'
 import router from '@/routers'
 
 //右上角头像的下拉菜单的选项响应
@@ -27,6 +27,7 @@ const dropCommand = (command) => {
                 let result = await userExitService();
                 //清空pinia和token
                 tokemStore.removeToken();
+                userInfoStore.removeInfo();
 
                 ElMessage({
                     type: 'success',
@@ -46,6 +47,15 @@ const dropCommand = (command) => {
     }
 }
 
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
+//把该账号的id和角色类型存到pinia中
+const getUserInfoMethod = async () => {
+    let result = await userGetInfoService();
+    userInfoStore.setInfo(result.data);
+}
+getUserInfoMethod();
 
 </script>
 
@@ -53,22 +63,22 @@ const dropCommand = (command) => {
     <el-container class="layout">
         <!-- 头部 -->
         <el-header class="e-header">
-            <div class="header-in">
+            <div class="header-in"> <!-- 左边的图标和标题 -->
                 <el-space>
                     <el-icon size="50">
                         <School />
                     </el-icon>
-                    <div>宿舍管理系统</div>
+                    <h2>宿舍管理系统</h2>
                 </el-space>
             </div>
-            <div class="header-in">
-                <el-space :size="large">
-                    <div>欢迎</div>
+            <div class="header-in"> <!-- 右边的欢迎和头像 -->
+                <el-space>
+                    <div>欢迎你，{{ userInfoStore.info.name }}</div>
                     <el-dropdown placement="bottom-end" @command="dropCommand">
                         <span class="e-avatar">
                             <el-avatar :src="avatar" :size="35" />
                         </span>
-                        <template #dropdown>
+                        <template #dropdown> <!-- 头像下拉菜单的插槽 -->
                             <el-dropdown-menu class="user-select-none">
                                 <el-dropdown-item command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
                             </el-dropdown-menu>
@@ -87,7 +97,7 @@ const dropCommand = (command) => {
                         </el-icon>
                         <span>寝室管理</span>
                     </el-menu-item>
-                    <el-menu-item index="">
+                    <el-menu-item index="/building">
                         <el-icon>
                             <OfficeBuilding />
                         </el-icon>
@@ -105,11 +115,17 @@ const dropCommand = (command) => {
                         </el-icon>
                         <span>宿管管理</span>
                     </el-menu-item>
-                    <el-sub-menu>
+                    <el-sub-menu> <!-- 父菜单-个人中心 -->
                         <template #title>
                             <span>个人中心</span>
                         </template>
-                        <el-menu-item index="">
+                        <el-menu-item index="/main">
+                            <el-icon>
+                                <House />
+                            </el-icon>
+                            <span>我的主页</span>
+                        </el-menu-item>
+                        <el-menu-item index="/userinfo">
                             <el-icon>
                                 <Postcard />
                             </el-icon>
@@ -142,6 +158,7 @@ const dropCommand = (command) => {
 .header-in {
     display: flex;
     align-items: center;
+    flex-direction: row;
 }
 
 .e-avatar {
