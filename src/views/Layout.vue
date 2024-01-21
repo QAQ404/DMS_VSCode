@@ -5,7 +5,7 @@ import avatar from '@/assets/default.jpg'
 import { ref } from 'vue'
 
 import { useTokenStore } from '@/stores/token.js';
-const tokemStore = useTokenStore();
+const tokenStore = useTokenStore();
 
 import { userExitService, userGetInfoService } from '@/api/user.js'
 import router from '@/routers'
@@ -26,7 +26,7 @@ const dropCommand = (command) => {
                 //后端退出
                 let result = await userExitService();
                 //清空pinia和token
-                tokemStore.removeToken();
+                tokenStore.removeToken();
                 userInfoStore.removeInfo();
 
                 ElMessage({

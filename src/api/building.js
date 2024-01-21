@@ -11,3 +11,11 @@ export const buildingAddService = (addData)=>{
     }
     return request.post('/building/addBuilding',params)
 }
+
+export const buildingGetInfoById = (id)=>{
+    return request.get('/building/getBuildingInfo?buildingId='+id)
+}
+
+export const buildingUpdateInfo = (Data)=>{
+    return request.put('/building/updateBuildingInfo',Data)
+}
