@@ -12,10 +12,14 @@ export const buildingAddService = (addData)=>{
     return request.post('/building/addBuilding',params)
 }
 
-export const buildingGetInfoById = (id)=>{
+export const buildingGetInfoByIdService = (id)=>{
     return request.get('/building/getBuildingInfo?buildingId='+id)
 }
 
-export const buildingUpdateInfo = (Data)=>{
+export const buildingUpdateInfoService = (Data)=>{
     return request.put('/building/updateBuildingInfo',Data)
+}
+
+export const buildingDeleteService = (id)=>{
+    return request.delete('/building/deleteBuilding?id='+id)
 }

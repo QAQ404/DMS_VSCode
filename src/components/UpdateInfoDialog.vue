@@ -26,19 +26,16 @@ const UpdateInfoDialogType = inject('UpdateInfoDialogType')
 const UpdateInfoDialogData = inject('UpdateInfoDialogData')
 const UpdateInfoDialogData2 = inject('UpdateInfoDialogData2')
 
-const returnData = ref({})
 const getReturnData = inject('getReturnData')
 const addDataBack = () => {
     if (UpdateInfoDialogData.value.manId[0] != null)
         UpdateInfoDialogData.value.manId = UpdateInfoDialogData.value.manId[0];
-    returnData.value = UpdateInfoDialogData.value;
-    getReturnData(returnData.value);
-    closeDialog();
+    getReturnData();
 }
 </script>
 
 <template>
-    <el-dialog v-model="ifShowUpdateInfoDialog" @close="closeDialog()" draggable title="修改信息">
+    <el-dialog v-model="ifShowUpdateInfoDialog" @close="closeDialog()"  title="修改信息">
         <div v-if="UpdateInfoDialogType === 'building'"><!-- 楼栋的更新表单 -->
             <el-form :model="UpdateInfoDialogData" :inline="true"> 
                 <el-form-item label="楼栋名称" placeholder="请输入楼栋名称" style="width: 45%;">
