@@ -5,6 +5,7 @@ import {
 } from '@element-plus/icons-vue'
 import { ref, inject } from 'vue'
 import defaultPicture from '@/assets/default2.jpg'
+import defaultPicture2 from '@/assets/default.jpg'
 import { useTokenStore } from '@/stores/token.js';
 import { ElMessage } from 'element-plus'
 const tokenStore = useTokenStore();
@@ -28,15 +29,13 @@ const UpdateInfoDialogData2 = inject('UpdateInfoDialogData2')
 
 const getReturnData = inject('getReturnData')
 const addDataBack = () => {
-    if (UpdateInfoDialogData.value.manId[0] != null)
-        UpdateInfoDialogData.value.manId = UpdateInfoDialogData.value.manId[0];
     getReturnData();
 }
 </script>
 
 <template>
     <el-dialog v-model="ifShowUpdateInfoDialog" @close="closeDialog()"  title="修改信息">
-        <div v-if="UpdateInfoDialogType === 'building'"><!-- 楼栋的更新表单 -->
+        <div v-if="UpdateInfoDialogType === 'building'"> <!-- 楼栋的更新表单 -->
             <el-form :model="UpdateInfoDialogData" :inline="true"> 
                 <el-form-item label="楼栋名称" placeholder="请输入楼栋名称" style="width: 45%;">
                     <el-input v-model="UpdateInfoDialogData.name" />
@@ -74,6 +73,38 @@ const addDataBack = () => {
                 </el-form-item>
             </el-form>
         </div>
+        <div v-else-if="UpdateInfoDialogType === 'manager'"> <!-- 宿管的更新表单 -->
+            <el-form :data="UpdateInfoDialogData" inline> 
+                <el-form-item label="编号" placeholder="请输入宿管姓名" style="width: 40%;">
+                    <el-input v-model="UpdateInfoDialogData.workId" />
+                </el-form-item>
+                <el-form-item label="姓名" placeholder="请输入宿管姓名" style="width: 45%;">
+                    <el-input v-model="UpdateInfoDialogData.name" />
+                </el-form-item>
+                <el-form-item label="账号" style="width: 50%;">
+                    <el-input v-model="UpdateInfoDialogData.username" disabled/>
+                </el-form-item>
+                <el-form-item label="性别" style="width: 30%;">
+                    <el-select v-model="UpdateInfoDialogData.gender">
+                        <el-option label="男" value="男" />
+                        <el-option label="女" value="女" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="电话" placeholder="请输入宿管姓名" style="width: 40%;">
+                    <el-input v-model="UpdateInfoDialogData.phone" />
+                </el-form-item>
+                <el-form-item label="邮箱" placeholder="请输入宿管姓名" style="width: 45%;">
+                    <el-input v-model="UpdateInfoDialogData.email" />
+                </el-form-item>
+                <el-form-item label="照片">
+                    <el-upload :auto-upload="true" :show-file-list="false" action="/api/upload" name="file"
+                        :headers="{ 'Authorization': tokenStore.token }" :on-success="uploadSuccess">
+                        <img v-if="UpdateInfoDialogData.picture" :src="UpdateInfoDialogData.picture" class="avatar" />
+                        <div v-else> <img :src="defaultPicture2" class="avatar2" /> </div>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+        </div>
         <template #footer>
             <span>
                 <el-button type="primary" @click="addDataBack">
@@ -87,6 +118,11 @@ const addDataBack = () => {
 <style scoped>
 .avatar {
     width: 185px;
+    height: 150px;
+    display: block;
+}
+.avatar2 {
+    width: 150px;
     height: 150px;
     display: block;
 }
