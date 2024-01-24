@@ -91,7 +91,7 @@ getUserInfoMethod();
             <!-- 页面左边菜单栏 -->
             <el-aside class="e-left-menu">
                 <el-menu active-text-color="#ffd04b" default-active="2" background-color="#545c64" text-color="#fff" router>
-                    <el-menu-item index="">
+                    <el-menu-item index="/dormitory">
                         <el-icon>
                             <HomeFilled />
                         </el-icon>
@@ -103,7 +103,7 @@ getUserInfoMethod();
                         </el-icon>
                         <span>楼栋管理</span>
                     </el-menu-item>
-                    <el-menu-item index="">
+                    <el-menu-item index="/student">
                         <el-icon>
                             <UserFilled />
                         </el-icon>

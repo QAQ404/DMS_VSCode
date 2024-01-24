@@ -23,3 +23,19 @@ export const managerAddService = (addData)=>{
 export const managerUpdateService = (Data,Data2)=>{
     return request.put('/manager/updateManager?old='+Data2,Data)
 }
+
+export const managerGetByIdService = (id)=>{
+    return request.get("/manager/getManagerById?id="+id)
+}
+
+export const managerUpdatePasswordService = (Data) =>{
+    const params = new URLSearchParams();
+    for (let key in Data) {
+        params.append(key, Data[key]);
+    }
+    return request.patch('/manager/updatePassword',params)
+}
+
+export const managerDeleteService = (id)=>{
+    return request.get('/manager/deleteManager?id='+id)
+}

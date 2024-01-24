@@ -203,12 +203,12 @@ const DeleteBuilding = (id) => {    //删除楼栋
             </el-form-item>
         </el-form>
         <!-- 表格主体 -->
-        <el-table :data="buildings" style="width: 100%;" border @sort-change="sortChange">
-            <el-table-column label="楼栋名称" prop="name" sortable="custom"></el-table-column>
-            <el-table-column label="单元数" prop="unitNumber" sortable="custom"></el-table-column>
-            <el-table-column label="寝室数" prop="dorNumber" sortable="custom"></el-table-column>
-            <el-table-column label="学生数" prop="stuNumber" sortable="custom"></el-table-column>
-            <el-table-column label="宿管" prop="manName" sortable="custom"></el-table-column>
+        <el-table :data="buildings" style="width: 100%;" border @sort-change="sortChange" tooltip-effect="light">
+            <el-table-column label="楼栋名称" prop="name" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column label="单元数" prop="unitNumber" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column label="寝室数" prop="dorNumber" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column label="学生数" prop="stuNumber" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column label="宿管" prop="manName" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作">
                 <template #default="{ row }">
                     <el-button-group>

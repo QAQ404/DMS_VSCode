@@ -75,11 +75,11 @@ const addDataBack = () => {
         </div>
         <div v-else-if="UpdateInfoDialogType === 'manager'"> <!-- 宿管的更新表单 -->
             <el-form :data="UpdateInfoDialogData" inline> 
-                <el-form-item label="编号" placeholder="请输入宿管姓名" style="width: 40%;">
-                    <el-input v-model="UpdateInfoDialogData.workId" />
+                <el-form-item label="编号" style="width: 40%;">
+                    <el-input v-model="UpdateInfoDialogData.workId"  placeholder="请输入工作编号"/>
                 </el-form-item>
-                <el-form-item label="姓名" placeholder="请输入宿管姓名" style="width: 45%;">
-                    <el-input v-model="UpdateInfoDialogData.name" />
+                <el-form-item label="姓名" style="width: 45%;">
+                    <el-input v-model="UpdateInfoDialogData.name"  placeholder="请输入姓名"/>
                 </el-form-item>
                 <el-form-item label="账号" style="width: 50%;">
                     <el-input v-model="UpdateInfoDialogData.username" disabled/>
@@ -90,16 +90,16 @@ const addDataBack = () => {
                         <el-option label="女" value="女" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="电话" placeholder="请输入宿管姓名" style="width: 40%;">
-                    <el-input v-model="UpdateInfoDialogData.phone" />
+                <el-form-item label="电话" style="width: 40%;">
+                    <el-input v-model="UpdateInfoDialogData.phone" placeholder="请输入电话"/>
                 </el-form-item>
-                <el-form-item label="邮箱" placeholder="请输入宿管姓名" style="width: 45%;">
-                    <el-input v-model="UpdateInfoDialogData.email" />
+                <el-form-item label="邮箱" style="width: 45%;">
+                    <el-input v-model="UpdateInfoDialogData.email" placeholder="请输入邮箱" />
                 </el-form-item>
                 <el-form-item label="照片">
                     <el-upload :auto-upload="true" :show-file-list="false" action="/api/upload" name="file"
                         :headers="{ 'Authorization': tokenStore.token }" :on-success="uploadSuccess">
-                        <img v-if="UpdateInfoDialogData.picture" :src="UpdateInfoDialogData.picture" class="avatar" />
+                        <img v-if="UpdateInfoDialogData.picture" :src="UpdateInfoDialogData.picture" class="avatar2" />
                         <div v-else> <img :src="defaultPicture2" class="avatar2" /> </div>
                     </el-upload>
                 </el-form-item>
@@ -122,8 +122,8 @@ const addDataBack = () => {
     display: block;
 }
 .avatar2 {
-    width: 150px;
-    height: 150px;
+    width: 140px; 
+    height: 180px;
     display: block;
 }
 </style>
