@@ -26,6 +26,7 @@ const closeDialog = () => {
 const UpdateInfoDialogType = inject('UpdateInfoDialogType')
 const UpdateInfoDialogData = inject('UpdateInfoDialogData')
 const UpdateInfoDialogData2 = inject('UpdateInfoDialogData2')
+const UpdateInfoDialogData3 = inject('UpdateInfoDialogData3')
 
 const getReturnData = inject('getReturnData')
 const addDataBack = () => {
@@ -34,14 +35,22 @@ const addDataBack = () => {
 </script>
 
 <template>
-    <el-dialog v-model="ifShowUpdateInfoDialog" @close="closeDialog()"  title="修改信息">
+    <el-dialog v-model="ifShowUpdateInfoDialog" @close="closeDialog()" title="修改信息">
         <div v-if="UpdateInfoDialogType === 'building'"> <!-- 楼栋的更新表单 -->
-            <el-form :model="UpdateInfoDialogData" :inline="true"> 
+            <el-form :model="UpdateInfoDialogData" :inline="true">
                 <el-form-item label="楼栋名称" placeholder="请输入楼栋名称" style="width: 45%;">
                     <el-input v-model="UpdateInfoDialogData.name" />
                 </el-form-item>
                 <el-form-item label="单元数" style="width: 40%;">
-                    <el-input-number v-model="UpdateInfoDialogData.unitNumber" :min="1" />
+                    <el-tooltip effect="light" placement="top">
+                        <template #content>
+                            <div v-if="UpdateInfoDialogData3.msg === 0">
+                                该楼现存寝室中单元号最大为{{ UpdateInfoDialogData3.unitNumber }}
+                            </div>
+                            <div v-else>该宿舍楼未拥有寝室</div>
+                        </template>
+                        <el-input-number v-model="UpdateInfoDialogData.unitNumber" :min="UpdateInfoDialogData3.unitNumber" />
+                    </el-tooltip>
                 </el-form-item>
                 <el-form-item label="寝室数" style="width: 45%;">
                     <el-input v-model="UpdateInfoDialogData.dorNumber" disabled />
@@ -58,7 +67,15 @@ const addDataBack = () => {
                         format="YYYY/MM/DD" />
                 </el-form-item>
                 <el-form-item label="楼层数" style="width: 40%;">
-                    <el-input-number v-model="UpdateInfoDialogData.floorNumber" :min="1" />
+                    <el-tooltip effect="light" placement="bottom">
+                        <template #content>
+                            <div v-if="UpdateInfoDialogData3.msg === 0">
+                                该楼现存寝室中楼层最高为{{ UpdateInfoDialogData3.floorNumber }}
+                            </div>
+                            <div v-else>该宿舍楼未拥有寝室</div>
+                        </template>
+                        <el-input-number v-model="UpdateInfoDialogData.floorNumber" :min="UpdateInfoDialogData3.floorNumber" />
+                    </el-tooltip>
                 </el-form-item><br>
                 <el-form-item label="照片">
                     <el-upload :auto-upload="true" :show-file-list="false" action="/api/upload" name="file"
@@ -74,15 +91,15 @@ const addDataBack = () => {
             </el-form>
         </div>
         <div v-else-if="UpdateInfoDialogType === 'manager'"> <!-- 宿管的更新表单 -->
-            <el-form :data="UpdateInfoDialogData" inline> 
+            <el-form :data="UpdateInfoDialogData" inline>
                 <el-form-item label="编号" style="width: 40%;">
-                    <el-input v-model="UpdateInfoDialogData.workId"  placeholder="请输入工作编号"/>
+                    <el-input v-model="UpdateInfoDialogData.workId" placeholder="请输入工作编号" />
                 </el-form-item>
                 <el-form-item label="姓名" style="width: 45%;">
-                    <el-input v-model="UpdateInfoDialogData.name"  placeholder="请输入姓名"/>
+                    <el-input v-model="UpdateInfoDialogData.name" placeholder="请输入姓名" />
                 </el-form-item>
                 <el-form-item label="账号" style="width: 50%;">
-                    <el-input v-model="UpdateInfoDialogData.username" disabled/>
+                    <el-input v-model="UpdateInfoDialogData.username" disabled />
                 </el-form-item>
                 <el-form-item label="性别" style="width: 30%;">
                     <el-select v-model="UpdateInfoDialogData.gender">
@@ -91,7 +108,7 @@ const addDataBack = () => {
                     </el-select>
                 </el-form-item>
                 <el-form-item label="电话" style="width: 40%;">
-                    <el-input v-model="UpdateInfoDialogData.phone" placeholder="请输入电话"/>
+                    <el-input v-model="UpdateInfoDialogData.phone" placeholder="请输入电话" />
                 </el-form-item>
                 <el-form-item label="邮箱" style="width: 45%;">
                     <el-input v-model="UpdateInfoDialogData.email" placeholder="请输入邮箱" />
@@ -121,8 +138,9 @@ const addDataBack = () => {
     height: 150px;
     display: block;
 }
+
 .avatar2 {
-    width: 140px; 
+    width: 140px;
     height: 180px;
     display: block;
 }

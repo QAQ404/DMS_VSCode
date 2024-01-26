@@ -24,7 +24,7 @@ const SeeInfoDialogData = inject('SeeInfoDialogData');  //从父组件中获取�
             </el-descriptions-item>
             <el-descriptions-item> <template #label> 学生数 </template> {{ SeeInfoDialogData.stuNumber }}
             </el-descriptions-item>
-            <el-descriptions-item> <template #label> 宿管姓名 </template> {{ SeeInfoDialogData.manName }}
+            <el-descriptions-item> <template #label> 宿管 </template>编号{{ SeeInfoDialogData.workId }}-{{ SeeInfoDialogData.manName }}
             </el-descriptions-item>
             <el-descriptions-item> <template #label> 建造年份 </template> {{ SeeInfoDialogData.buildYear }}
             </el-descriptions-item>

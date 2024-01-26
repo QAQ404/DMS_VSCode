@@ -23,3 +23,12 @@ export const buildingUpdateInfoService = (Data)=>{
 export const buildingDeleteService = (id)=>{
     return request.delete('/building/deleteBuilding?id='+id)
 }
+
+export const buildingGetOnlyNameService = ()=>{
+    return request.get('/building/getOnlyName')
+}
+
+export const buildingGetUnitAndFloorService = (id)=>{
+    return request.get('/building/getUnitAndFloor?id='+id)
+}
+

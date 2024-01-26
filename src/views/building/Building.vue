@@ -3,6 +3,7 @@ import { Edit, Delete, View, AddLocation, Search, Refresh } from '@element-plus/
 import { ref, provide } from 'vue'
 import { buildingGetListService, buildingAddService, buildingGetInfoByIdService, buildingUpdateInfoService, buildingDeleteService } from '@/api/building.js'
 import { managerGetOnlyNameService, managerChangeBuildingNumberService } from '@/api/manager.js'
+import { dormitoryGetMaxUnitAndFloorService } from '@/api/dormitory.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const pageInfo = ref({  //分页条的信息
@@ -56,7 +57,7 @@ const sortChange = (data) => {  //排序选择
 }
 
 const clearSearchData = () => {  //清空搜索框
-    searchData.value = ref({})
+    searchData.value = ref({}).value
 }
 
 const getSearchData = () => { //进行搜索
@@ -120,12 +121,15 @@ const ifShowUpdateInfoDialogVue = ref(false);
 const UpdateInfoDialogType = ref('building')
 const UpdateInfoDialogData = ref({})
 const UpdateInfoDialogData2 = ref({})
+const UpdateInfoDialogData3 = ref({})
 const ifManagerChange = ref()
 const SeeUpdateDialog = async (id) => {
     let result = await buildingGetInfoByIdService(id);
     UpdateInfoDialogData.value = result.data;   //先传值，在显示弹窗！！！
     UpdateInfoDialogData2.value = managerList.value;
     ifManagerChange.value = UpdateInfoDialogData.value.manId;
+    let result2 = await dormitoryGetMaxUnitAndFloorService(id);
+    UpdateInfoDialogData3.value = result2.data;
     ifShowUpdateInfoDialogVue.value = true;
 }
 provide('ifShowUpdateInfoDialogVue', ifShowUpdateInfoDialogVue)
@@ -135,6 +139,7 @@ provide('changeIfShowUpdateInfoDialogVue', (newISUIDV) => {
 provide('UpdateInfoDialogType', UpdateInfoDialogType)
 provide('UpdateInfoDialogData', UpdateInfoDialogData)
 provide('UpdateInfoDialogData2', UpdateInfoDialogData2)
+provide('UpdateInfoDialogData3', UpdateInfoDialogData3)
 provide('getReturnData', async () => {
     if (UpdateInfoDialogData.value.manId[0] != null)
         UpdateInfoDialogData.value.manId = UpdateInfoDialogData.value.manId[0];

@@ -220,6 +220,9 @@ const DeleteManager = (row) => { //删除宿管
                     </el-button-group>
                 </template>
             </el-table-column>
+            <template #empty>
+                <el-empty description="没有数据" />
+            </template>
         </el-table>
         <!-- 分页条 -->
         <el-pagination v-model:current-page="pageInfo.pageNum" v-model:page-size="pageInfo.pageSize"
