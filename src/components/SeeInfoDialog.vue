@@ -24,7 +24,8 @@ const SeeInfoDialogData = inject('SeeInfoDialogData');  //从父组件中获取�
             </el-descriptions-item>
             <el-descriptions-item> <template #label> 学生数 </template> {{ SeeInfoDialogData.stuNumber }}
             </el-descriptions-item>
-            <el-descriptions-item> <template #label> 宿管 </template>编号{{ SeeInfoDialogData.workId }}-{{ SeeInfoDialogData.manName }}
+            <el-descriptions-item> <template #label> 宿管 </template>编号{{ SeeInfoDialogData.workId }}-{{
+                SeeInfoDialogData.manName }}
             </el-descriptions-item>
             <el-descriptions-item> <template #label> 建造年份 </template> {{ SeeInfoDialogData.buildYear }}
             </el-descriptions-item>
@@ -34,13 +35,40 @@ const SeeInfoDialogData = inject('SeeInfoDialogData');  //从父组件中获取�
             </el-descriptions-item>
             <el-descriptions-item> <template #label> 图片 </template>
                 <div>
-                    <el-image v-if="SeeInfoDialogData.picture"  :src="SeeInfoDialogData.picture" class="avatar" :fit="fill"
+                    <el-image v-if="SeeInfoDialogData.picture" :src="SeeInfoDialogData.picture" class="avatar" :fit="fill"
                         :preview-src-list="[SeeInfoDialogData.picture]" />
-                    <el-image v-else :src="defaultPicture" class="avatar" :fit="fill" :preview-src-list="[defaultPicture]" />
+                    <el-image v-else :src="defaultPicture" class="avatar" :fit="fill"
+                        :preview-src-list="[defaultPicture]" />
                 </div>
             </el-descriptions-item>
             <el-descriptions-item> <template #label> 介绍 </template>
                 <el-input v-model="SeeInfoDialogData.introduction" :rows="9" type="textarea" disabled />
+            </el-descriptions-item>
+        </el-descriptions>
+        <el-descriptions border :column="2" v-if="SeeInfoDialogType === 'dormitory'"> <!-- 寝室细信息 -->
+            <el-descriptions-item> <template #label> 楼栋名称 </template> {{ SeeInfoDialogData.name }} </el-descriptions-item>
+            <el-descriptions-item> <template #label> 宿舍楼 </template> {{ SeeInfoDialogData.buildingName }}
+            </el-descriptions-item>
+            <el-descriptions-item> <template #label> 单元 </template> {{ SeeInfoDialogData.unitNumber }}单元
+            </el-descriptions-item>
+            <el-descriptions-item> <template #label> 楼层 </template> {{ SeeInfoDialogData.floorNumber }}楼
+            </el-descriptions-item>
+            <el-descriptions-item> <template #label> 学生数 </template> {{ SeeInfoDialogData.stuNumber }}
+            </el-descriptions-item>
+            <el-descriptions-item> <template #label> 床位数 </template> {{ SeeInfoDialogData.bedNumber }}
+            </el-descriptions-item>
+            <el-descriptions-item> <template #label> 宿管 </template>编号{{ SeeInfoDialogData.workId }}-{{
+                SeeInfoDialogData.manName }}
+            </el-descriptions-item>
+            <el-descriptions-item> <template #label> 更新时间 </template> {{ SeeInfoDialogData.updateTime }}
+            </el-descriptions-item>
+            <el-descriptions-item> <template #label> 图片 </template>
+                <div>
+                    <el-image v-if="SeeInfoDialogData.picture" :src="SeeInfoDialogData.picture" class="avatar" :fit="fill"
+                        :preview-src-list="[SeeInfoDialogData.picture]" />
+                    <el-image v-else :src="defaultPicture" class="avatar" :fit="fill"
+                        :preview-src-list="[defaultPicture]" />
+                </div>
             </el-descriptions-item>
         </el-descriptions>
     </el-dialog>
@@ -48,8 +76,7 @@ const SeeInfoDialogData = inject('SeeInfoDialogData');  //从父组件中获取�
 
 <style scoped>
 .avatar {
-    width: 225px;
-    height: 200px;
+    width: 205px;
+    height: 180px;
     display: block;
-}
-</style>
+}</style>

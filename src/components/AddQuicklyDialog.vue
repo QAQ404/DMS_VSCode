@@ -85,7 +85,7 @@ const rules = {
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item label="寝室床位数">
-                    <el-input-number v-model="AddQuicklyDialogData.bedNumber" :min="1" />
+                    <el-input-number v-model="AddQuicklyDialogData.bedNumber" :min="0" />
                 </el-form-item>&nbsp;
                 <el-form-item label="楼层号">
                     <el-tooltip effect="light" placement="bottom">

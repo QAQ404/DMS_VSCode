@@ -37,5 +37,5 @@ export const managerUpdatePasswordService = (Data) =>{
 }
 
 export const managerDeleteService = (id)=>{
-    return request.get('/manager/deleteManager?id='+id)
+    return request.delete('/manager/deleteManager?id='+id)
 }

@@ -32,6 +32,11 @@ const getReturnData = inject('getReturnData')
 const addDataBack = () => {
     getReturnData();
 }
+
+const UpdateInfoDialogFunction = inject('UpdateInfoDialogFunction');
+const Function = (value) => {
+    UpdateInfoDialogFunction(value);
+}
 </script>
 
 <template>
@@ -49,7 +54,8 @@ const addDataBack = () => {
                             </div>
                             <div v-else>该宿舍楼未拥有寝室</div>
                         </template>
-                        <el-input-number v-model="UpdateInfoDialogData.unitNumber" :min="UpdateInfoDialogData3.unitNumber" />
+                        <el-input-number v-model="UpdateInfoDialogData.unitNumber"
+                            :min="UpdateInfoDialogData3.unitNumber" />
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item label="寝室数" style="width: 45%;">
@@ -74,7 +80,8 @@ const addDataBack = () => {
                             </div>
                             <div v-else>该宿舍楼未拥有寝室</div>
                         </template>
-                        <el-input-number v-model="UpdateInfoDialogData.floorNumber" :min="UpdateInfoDialogData3.floorNumber" />
+                        <el-input-number v-model="UpdateInfoDialogData.floorNumber"
+                            :min="UpdateInfoDialogData3.floorNumber" />
                     </el-tooltip>
                 </el-form-item><br>
                 <el-form-item label="照片">
@@ -122,6 +129,51 @@ const addDataBack = () => {
                 </el-form-item>
             </el-form>
         </div>
+        <div v-else-if="UpdateInfoDialogType === 'dormitory'"> <!-- 宿管的更新表单 -->
+            <el-form :data="UpdateInfoDialogData" inline>
+                <el-form-item label="寝室名称" placeholder="请输入寝室名称" style="width: 45%;">
+                    <el-input v-model="UpdateInfoDialogData.name" />
+                </el-form-item>
+                <el-form-item label="单元号" style="width: 40%;">
+                    <el-tooltip effect="light" placement="top">
+                        <template #content>
+                            该楼的最大单元号为{{ UpdateInfoDialogData3.unitNumber }}
+                        </template>
+                        <el-input-number v-model="UpdateInfoDialogData.unitNumber"
+                            :max="UpdateInfoDialogData3.unitNumber" :min="1"/>
+                    </el-tooltip>
+                </el-form-item>
+                <el-form-item label="入住人数" style="width: 45%;">
+                    <el-input v-model="UpdateInfoDialogData.stuNumber" disabled />
+                </el-form-item>
+                <el-form-item label="床位数" style="width: 40%;">
+                    <el-input-number v-model="UpdateInfoDialogData.bedNumber" :min="UpdateInfoDialogData.stuNumber"/>
+                </el-form-item>
+                <el-form-item label="所在楼栋">
+                    <el-select v-model="UpdateInfoDialogData.buildingId" filterable style="width: 200px"
+                        @change="Function(UpdateInfoDialogData.buildingId)">
+                        <el-option v-for="item in UpdateInfoDialogData2" :key="item.value" :label="item.label"
+                            :value="item.value" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所在楼层" style="width: 40%;">
+                    <el-tooltip effect="light" placement="bottom">
+                        <template #content>
+                                该楼共有{{ UpdateInfoDialogData3.floorNumber }}层
+                        </template>
+                        <el-input-number v-model="UpdateInfoDialogData.floorNumber"
+                            :max="UpdateInfoDialogData3.floorNumber" :min="1"/>
+                    </el-tooltip>
+                </el-form-item>
+                <el-form-item label="寝室照片">
+                    <el-upload :auto-upload="true" :show-file-list="false" action="/api/upload" name="file"
+                        :headers="{ 'Authorization': tokenStore.token }" :on-success="uploadSuccess">
+                        <img v-if="UpdateInfoDialogData.picture" :src="UpdateInfoDialogData.picture" class="avatar" />
+                        <div v-else> <img :src="defaultPicture" class="avatar" /> </div>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+        </div>
         <template #footer>
             <span>
                 <el-button type="primary" @click="addDataBack">
@@ -143,5 +195,4 @@ const addDataBack = () => {
     width: 140px;
     height: 180px;
     display: block;
-}
-</style>
+}</style>
