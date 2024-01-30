@@ -105,6 +105,13 @@ const rules = {
                 </el-form-item>
             </el-form>
         </div>
+        <div v-else-if="AddQuicklyDialogType === 'institute'"> <!-- 学院快速添加 -->
+            <el-form :data="AddQuicklyDialogData" autocomplete="off" >
+                <el-form-item label="学院名称">
+                    <el-input v-model="AddQuicklyDialogData.name" placeholder="请输入学院名称" />
+                </el-form-item>
+            </el-form>
+        </div>
         <template #footer>
             <span>
                 <el-button @click="closeDialog()">取消</el-button>

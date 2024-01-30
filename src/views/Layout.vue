@@ -1,5 +1,5 @@
 <script setup>
-import { UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House } from '@element-plus/icons-vue'
+import { UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House, Connection, Reading } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import avatar from '@/assets/default.jpg'
 import { ref } from 'vue'
@@ -87,35 +87,64 @@ getUserInfoMethod();
                 </el-space>
             </div>
         </el-header>
-        <el-container>
+        <el-container style="user-select: none;">
             <!-- 页面左边菜单栏 -->
             <el-aside class="e-left-menu">
-                <el-menu active-text-color="#ffd04b" default-active="2" background-color="#545c64" text-color="#fff" router>
-                    <el-menu-item index="/dormitory">
-                        <el-icon>
-                            <HomeFilled />
-                        </el-icon>
-                        <span>寝室管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="/building">
-                        <el-icon>
-                            <OfficeBuilding />
-                        </el-icon>
-                        <span>楼栋管理</span>
-                    </el-menu-item>
+                <el-menu active-text-color="#ffd04b"  background-color="#545c64" text-color="#fff"
+                    router>
+                    <el-sub-menu index="1">
+                        <template #title>
+                            <span>宿舍管理</span>
+                        </template>
+                        <el-menu-item index="/dormitory">
+                            <el-icon>
+                                <HomeFilled />
+                            </el-icon>
+                            <span>寝室管理</span>
+                        </el-menu-item>
+                        <el-menu-item index="/building">
+                            <el-icon>
+                                <OfficeBuilding />
+                            </el-icon>
+                            <span>楼栋管理</span>
+                        </el-menu-item>
+                    </el-sub-menu>
                     <el-menu-item index="/student">
                         <el-icon>
                             <UserFilled />
                         </el-icon>
                         <span>学生管理</span>
                     </el-menu-item>
+                    <el-sub-menu indx="2">
+                        <template #title>
+                            <span>学院信息</span>
+                        </template>
+                        <el-menu-item index="/institute">
+                            <el-icon>
+                                <School />
+                            </el-icon>
+                            <span>学院管理</span>
+                        </el-menu-item>
+                        <el-menu-item index="/major">
+                            <el-icon>
+                                <Reading />
+                            </el-icon>
+                            <span>专业管理</span>
+                        </el-menu-item>
+                        <el-menu-item index="/clazz">
+                            <el-icon>
+                                <Connection />
+                            </el-icon>
+                            <span>班级管理</span>
+                        </el-menu-item>
+                    </el-sub-menu>
                     <el-menu-item index="/manager">
                         <el-icon>
                             <User />
                         </el-icon>
                         <span>宿管管理</span>
                     </el-menu-item>
-                    <el-sub-menu> <!-- 父菜单-个人中心 -->
+                    <el-sub-menu index="3"> <!-- 父菜单-个人中心 -->
                         <template #title>
                             <span>个人中心</span>
                         </template>
@@ -182,5 +211,4 @@ getUserInfoMethod();
 /*菜单展开箭头样式*/
 .el-sub-menu.is-opened> :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
     transform: rotate(0deg) !important;
-}
-</style>
+}</style>

@@ -54,6 +54,7 @@ const sortChange = (data) => {  //排序选择
 }
 const clearSearchData = ()=>{
     searchData.value = ref({}).value;
+    getManagerList()
 }
 const getSearchData = ()=>{
     getManagerList();

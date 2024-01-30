@@ -58,6 +58,7 @@ const sortChange = (data) => {  //排序选择
 
 const clearSearchData = () => {  //清空搜索框
     searchData.value = ref({}).value
+    getBuildingList();
 }
 
 const getSearchData = () => { //进行搜索
