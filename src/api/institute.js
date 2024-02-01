@@ -4,6 +4,10 @@ export const instituteGetInstituteListService = (data)=>{
     return request.post('/institute/getInstituteList',data)
 }
 
+export const instituteGetInstituteNameListService = ()=>{
+    return request.get('/institute/getInstituteNameList')
+}
+
 export const instituteAddService = (data) =>{
     const params = new URLSearchParams();
     for (let key in data) {

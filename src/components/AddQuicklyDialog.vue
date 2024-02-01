@@ -112,6 +112,18 @@ const rules = {
                 </el-form-item>
             </el-form>
         </div>
+        <div v-else-if="AddQuicklyDialogType === 'major'"> <!-- 专业快速添加 -->
+            <el-form :data="AddQuicklyDialogData" autocomplete="off" >
+                <el-form-item label="专业名称">
+                    <el-input v-model="AddQuicklyDialogData.name" placeholder="请输入专业名称" />
+                </el-form-item>
+                <el-form-item  label="所属学院">
+                <el-select v-model="AddQuicklyDialogData.insName" filterable style="width: 400px">
+                    <el-option v-for="item in AddQuicklyDialogData2" :key="item.value" :label="item.label" :value="item.label" />
+                </el-select>
+            </el-form-item>
+            </el-form>
+        </div>
         <template #footer>
             <span>
                 <el-button @click="closeDialog()">取消</el-button>

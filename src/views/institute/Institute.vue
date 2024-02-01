@@ -59,8 +59,8 @@ const getSearchData = () => {
 }
 /* ---------------------------------------------------添加楼栋弹窗---------------------------------------------------------- */
 import AddQuicklyDialogVue from '@/components/addQuicklyDialog.vue'
-const ifShowAddQuicklyDialogVue = ref(false) //添加楼栋弹窗是否显示
-const AddQuicklyDialogData = ref({}) //添加楼栋的输入信息
+const ifShowAddQuicklyDialogVue = ref(false) 
+const AddQuicklyDialogData = ref({})
 const AddQuicklyDialogType = ref('institute')
 const SeeAddQuicklyDialog = () => {
     ifShowAddQuicklyDialogVue.value = true;
@@ -72,7 +72,7 @@ provide('AddQuicklyDialogType', AddQuicklyDialogType)
 provide('changeifAddQuicklyDialogVue', (newV) => {
     ifShowAddQuicklyDialogVue.value = newV;
 })
-provide('giveReturnData', async () => { //添加楼栋的按钮功能    
+provide('giveReturnData', async () => {     
     if (AddQuicklyDialogData.value.name == null) {
         ElMessage.error("输入不能为空"); return;
     }
@@ -85,7 +85,7 @@ provide('giveReturnData', async () => { //添加楼栋的按钮功能
     getInstituteList();
 })
 /* -----------------------------------------------------更新框组件-------------------------------------------------------- */
-import UpdateInfoDialogVue from '@/components/UpdateInfoDialog.vue' //更新的弹窗组件
+import UpdateInfoDialogVue from '@/components/UpdateInfoDialog.vue' 
 const ifShowUpdateInfoDialogVue = ref(false);
 const UpdateInfoDialogType = ref('institute')
 const UpdateInfoDialogData = ref({})
@@ -156,7 +156,7 @@ const DeleteInstitute = (id) => {    //删除楼栋
             </div>
         </template>
         <el-form :inline="true" :model="searchData" size="default"> <!-- 搜索表单 -->
-            <el-form-item label="名称"><el-input v-model="searchData.name" placeholder="学院姓名"
+            <el-form-item label="名称"><el-input v-model="searchData.name" placeholder="学院名称"
                     style="width: 150px;" /></el-form-item>
             <el-form-item label="专业不少于"><el-input-number size="small" v-model="searchData.majorNumber" :min="0"
                     class="input-with" /></el-form-item>
