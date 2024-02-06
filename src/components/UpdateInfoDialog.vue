@@ -188,6 +188,13 @@ const Function = (value) => {
                 </el-form-item>
             </el-form>
         </div>
+        <div v-else-if="UpdateInfoDialogType === 'clazz'"> <!-- 专业的更新表单 -->
+            <el-form :data="UpdateInfoDialogData">
+                <el-form-item label="班级号">
+                    <el-input-number v-model="UpdateInfoDialogData.name" />
+                </el-form-item>
+            </el-form>
+        </div>
         <template #footer>
             <span>
                 <el-button type="primary" @click="addDataBack">

@@ -65,7 +65,7 @@ const clearSearchData = () => {
 const getSearchData = () => {
     getMajorList();
 }
-/* ---------------------------------------------------添加楼栋弹窗---------------------------------------------------------- */
+/* ---------------------------------------------------添加专业弹窗---------------------------------------------------------- */
 import AddQuicklyDialogVue from '@/components/addQuicklyDialog.vue'
 const ifShowAddQuicklyDialogVue = ref(false) 
 const AddQuicklyDialogData = ref({}) 
@@ -81,7 +81,7 @@ provide('AddQuicklyDialogType', AddQuicklyDialogType)
 provide('changeifAddQuicklyDialogVue', (newV) => {
     ifShowAddQuicklyDialogVue.value = newV;
 })
-provide('giveReturnData', async () => { //添加楼栋的按钮功能    
+provide('giveReturnData', async () => { //添加的按钮功能    
     if (AddQuicklyDialogData.value.name == null) {
         ElMessage.error("输入不能为空"); return;
     }
@@ -127,7 +127,7 @@ provide('getReturnData', async () => {
 })
 /* ------------------------------------------------------------------------------------------------------------- */
 
-const DeleteInstitute = (id) => {    //删除楼栋
+const DeleteInstitute = (id) => {    //删除
     ElMessageBox.confirm(
         '是否确认删除',
         '温馨提示',
@@ -158,9 +158,9 @@ const DeleteInstitute = (id) => {    //删除楼栋
     <el-card style="min-height: 99%;">
         <template #header> <!-- 卡片顶部区域 -->
             <div class="card-header">
-                <span>学院信息</span>
+                <span>专业信息</span>
                 <div>
-                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="AddLocation">添加学院</el-button>
+                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="AddLocation">添加专业</el-button>
                 </div>
             </div>
         </template>

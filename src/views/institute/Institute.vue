@@ -57,7 +57,7 @@ const clearSearchData = () => {
 const getSearchData = () => {
     getInstituteList();
 }
-/* ---------------------------------------------------添加楼栋弹窗---------------------------------------------------------- */
+/* ---------------------------------------------------添加学院弹窗---------------------------------------------------------- */
 import AddQuicklyDialogVue from '@/components/addQuicklyDialog.vue'
 const ifShowAddQuicklyDialogVue = ref(false) 
 const AddQuicklyDialogData = ref({})
@@ -118,7 +118,7 @@ provide('getReturnData', async () => {
 })
 /* ------------------------------------------------------------------------------------------------------------- */
 
-const DeleteInstitute = (id) => {    //删除楼栋
+const DeleteInstitute = (id) => {    //删除
     ElMessageBox.confirm(
         '是否确认删除',
         '温馨提示',

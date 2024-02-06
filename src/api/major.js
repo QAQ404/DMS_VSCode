@@ -4,6 +4,10 @@ export const majorGetMajorListService = (data)=>{
     return request.post('/major/getMajorList',data)
 }
 
+export const majorGetMajorNameListService = (data)=>{
+    return request.get('/major/getMajorNameList?insName='+data)
+}
+
 export const majorAddService = (data) =>{
     const params = new URLSearchParams();
     for (let key in data) {

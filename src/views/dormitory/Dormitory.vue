@@ -233,7 +233,7 @@ const AddDetailedDialogData3 = ref({})
 const AddDetailedDialogInputShow = ref(false)
 const AddDetailedDialogInputData = ref()
 const AddDetailedDialogData4 = ref()
-const SeeAddDetailedDialog = async () => {
+const SeeAddDetailedDialog = async () => { //打开批量添加对话框，初始化数据
     ifShowAddDetailedDialog.value = true;
     AddDetailedDialogData.value = ref({ unitNumber: 1, floorNumber: 1, bedNumber: 4, buildingId: 14, nameList: [] }).value;
     if (AddDetailedDialogData2.value === null) {
@@ -249,10 +249,10 @@ const SeeAddDetailedDialog = async () => {
     let result3 = await dormitoryGetNameListCheckTheSameName(params);
     AddDetailedDialogData4.value = result3.data;
 }
-const closeAddDetailedDialog = () => {
+const closeAddDetailedDialog = () => { //关闭对话框
     ifShowAddDetailedDialog.value = false;
 }
-const AddDetailedDialogFunction = async (value) => {
+const AddDetailedDialogFunction = async (value) => { 
     let result = await buildingGetUnitAndFloorService(value);
     AddDetailedDialogData3.value = result.data;
     if (AddDetailedDialogData3.value.unitNumber < AddDetailedDialogData.value.unitNumber)
@@ -267,7 +267,7 @@ const AddDetailedDialogFunction = async (value) => {
     let result2 = await dormitoryGetNameListCheckTheSameName(params);
     AddDetailedDialogData4.value = result2.data;
 }
-const AddDetailedTag = () => {
+const AddDetailedTag = () => {  
     AddDetailedDialogInputShow.value = true;
     nextTick(() => {
         refInput.value.focus()
@@ -352,7 +352,7 @@ const DeleteDormitory = (id) => {    //删除楼栋
                     <el-dropdown trigger="click" placement="right-start" @command=" addSearchTag ">
                         <el-button type="primary" plain size="small" :icon=" Plus "></el-button>
                         <template #dropdown>
-                            <el-dropdown-menu>
+                            <el-dropdown-menu style="user-select: none;">
                                 <el-dropdown-item command="0" :disabled=" tagData[0].ifShow ">寝室名称</el-dropdown-item>
                                 <el-dropdown-item command="1" :disabled=" tagData[1].ifShow ">所在单元</el-dropdown-item>
                                 <el-dropdown-item command="2" :disabled=" tagData[2].ifShow ">所在楼栋</el-dropdown-item>
@@ -364,21 +364,21 @@ const DeleteDormitory = (id) => {    //删除楼栋
                         </template>
                     </el-dropdown>
                     <div v-for="               tag                in                tagData               " :key=" tag ">
-                        <el-popover :visible=" tag.popoverVisible " placement="bottom" :width=" 140 ">
-                            <el-input v-model=" tag.value " size="small" v-if=" tag.inputType === 1 " />
-                            <el-input-number v-model=" tag.value " size="small" v-else-if=" tag.inputType === 2 "
+                        <el-popover :visible=" tag.popoverVisible " placement="bottom" :width=" 140 " style="user-select: none;">
+                            <el-input v-model=" tag.value " size="small" v-if=" tag.inputType === 1 " style="user-select: none;"/>
+                            <el-input-number v-model=" tag.value " size="small" v-else-if=" tag.inputType === 2 " style="user-select: none;"
                                 :min=" 0 " />
-                            <el-select v-model=" tag.data " filterable style="width: 130px"
+                            <el-select v-model=" tag.data " filterable style="width: 130px;user-select: none;"
                                 v-else-if=" tag.inputType === 3 " @change="selectBuildingChange(tag)" size="small">
                                 <el-option v-for="             item              in              buildingList             "
-                                    :key=" item.value " :label=" item.label " :value=" item.value " />
+                                    :key=" item.value " :label=" item.label " :value=" item.value "  style="user-select: none;"/>
                             </el-select>
-                            <el-select v-model=" tag.data " filterable style="width: 130px"
+                            <el-select v-model=" tag.data " filterable style="width: 130px;user-select: none;"
                                 @change="selectManagerChange(tag)" v-else-if=" tag.inputType === 4 " size="small">
                                 <el-option v-for="             item              in              managerList             "
-                                    :key=" item.value " :label=" item.label " :value=" item.value " />
+                                    :key=" item.value " :label=" item.label " :value=" item.value "  style="user-select: none;"/>
                             </el-select>
-                            <div style="text-align: right; padding-top: 10px">
+                            <div style="text-align: right; padding-top: 10px;user-select: none;">
                                 <el-button size="small" type="info" @click="doBack(tag)">取消</el-button>
                                 <el-button size="small" type="primary" @click="doSearch(tag)">确认</el-button>
                             </div>

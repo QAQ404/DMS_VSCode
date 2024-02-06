@@ -3,6 +3,7 @@
 import { ref, inject } from 'vue'
 
 const ifShowAddQuicklyDialogVue = inject('ifShowAddQuicklyDialogVue')
+const ifShowAddQuicklyDialogVue2 = inject('ifShowAddQuicklyDialogVue2')
 const changeIAQDV = inject('changeifAddQuicklyDialogVue');    //接收修改是否显示弹窗的功能
 const closeDialog = () => {   //子用父，关闭弹窗
     changeIAQDV(false);
@@ -17,8 +18,12 @@ const addDataBack = () => {
     giveReturnData();
 }
 const AddQuicklyDialogFunction = inject('AddQuicklyDialogFunction');
+const AddQuicklyDialogFunction2 = inject('AddQuicklyDialogFunction2');
 const Function = (value) => {
     AddQuicklyDialogFunction(value);
+}
+const Function2 = (value) => {
+    AddQuicklyDialogFunction2(value);
 }
 //校验密码的函数
 const checkRePassword = (rule, value, callback) => {
@@ -120,6 +125,26 @@ const rules = {
                 <el-form-item  label="所属学院">
                 <el-select v-model="AddQuicklyDialogData.insName" filterable style="width: 400px">
                     <el-option v-for="item in AddQuicklyDialogData2" :key="item.value" :label="item.label" :value="item.label" />
+                </el-select>
+            </el-form-item>
+            </el-form>
+        </div>
+        <div v-else-if="AddQuicklyDialogType === 'clazz'"> <!-- 班级快速添加 -->
+            <el-form :data="AddQuicklyDialogData" autocomplete="off" >
+                <el-form-item label="班级号">
+                    &nbsp;&nbsp;&nbsp;<el-input-number v-model="AddQuicklyDialogData.name"  :min="1"/>
+                </el-form-item>
+                <el-form-item label="年级">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<el-date-picker v-model="AddQuicklyDialogData.entranceYear" type="year"
+                    placeholder="选择年份" value-format="YYYY"/></el-form-item>
+                <el-form-item  label="所属学院">
+                <el-select v-model="AddQuicklyDialogData.insName" filterable style="width: 400px" @change="Function()">
+                    <el-option v-for="item in AddQuicklyDialogData2" :key="item.value" :label="item.label" :value="item.label" />
+                </el-select>
+            </el-form-item>
+            <el-form-item  label="所属专业">
+                <el-select v-model="AddQuicklyDialogData.majorName" filterable :disabled="ifShowAddQuicklyDialogVue2"  style="width: 400px"
+                placeholder="先选择学院">
+                    <el-option v-for="item in AddQuicklyDialogData3" :key="item.value" :label="item.label" :value="item.label" />
                 </el-select>
             </el-form-item>
             </el-form>
