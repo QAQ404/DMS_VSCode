@@ -154,7 +154,7 @@ getUserInfoMethod();
                             </el-icon>
                             <span>我的主页</span>
                         </el-menu-item>
-                        <el-menu-item index="/userinfo">
+                        <el-menu-item index="/userInfo">
                             <el-icon>
                                 <Postcard />
                             </el-icon>
@@ -165,7 +165,12 @@ getUserInfoMethod();
             </el-aside>
             <!-- 页面主页内容 -->
             <el-main style="background-color: #F2F6FC;padding: 7px;">
-                <router-view></router-view>
+                <router-view v-slot="{ Component }">
+                    <keep-alive>
+                        <component :is="Component" :key="$route.name"  v-if="$route.meta.keepAlive"/>
+                    </keep-alive>
+                    <component :is="Component" :key="$route.name"  v-if="!$route.meta.keepAlive"/>
+                </router-view>
             </el-main>
         </el-container>
     </el-container>

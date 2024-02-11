@@ -24,3 +24,7 @@ export const updateClazzService = (data)=>{
 export const clazzDeleteService = (id) =>{
     return request.delete('/clazz/deleteClazz?id='+id)
 }
+
+export const clazzGetClazzListCascaderService = ()=>{
+    return request.get('/clazz/getClazzListCascader')
+}
