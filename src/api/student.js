@@ -7,3 +7,7 @@ export const getStudentListService = (data)=>{
 export const getStudentByIdService = (id)=>{
     return request.get('/student/getStudentById?id='+id)
 }
+
+export const AddStudentService = (data)=>{
+    return request.post('/student/addStudent',data)
+}

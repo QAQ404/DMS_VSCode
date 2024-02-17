@@ -1,6 +1,6 @@
 <script setup>
 import { Plus, Edit, Delete, View, Refresh, Check } from '@element-plus/icons-vue'
-import { ref, provide, nextTick } from 'vue'
+import { ref, provide, nextTick ,onActivated} from 'vue'
 import defaultPicture from '@/assets/default2.jpg'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { dormitoryAddManyService, dormitoryGetNameListCheckTheSameName, dormitoryDeleteService, dormitoryGetListService, dormitoryAddService, dormitoryGetDormitoryByIdService, dormitoryUpdateInfoService } from '@/api/dormitory.js'
@@ -54,7 +54,7 @@ const getdormitoryList = async () => {
     pageInfo.value.total = result.data.total;
     dormitoryList.value = result.data.items;
 }
-getdormitoryList()
+
 const sortChange = (data) => {  //排序选择
     if (data.order === null) {
         sortData.value.prop = '';
@@ -71,14 +71,14 @@ const getManagerList = async () => {  //获取全体管理员的名字和工作�
     let result = await managerGetOnlyNameService();
     managerList.value = result.data;
 }
-getManagerList();
+
 const buildingList = ref([])
 const getBuildingList = async () => {  //获取全体寝室楼的名字和工作编号
     let result = await buildingGetOnlyNameService();
     buildingList.value = result.data;
 }
-getBuildingList();
-/* ----------------------------------------添加宿管组件--------------------------------------------------------------------- */
+
+/* ----------------------------------------添加组件--------------------------------------------------------------------- */
 import AddQuicklyDialogVue from '@/components/addQuicklyDialog.vue'
 const ifShowAddQuicklyDialogVue = ref(false) //添加宿管弹窗是否显示
 const AddQuicklyDialogData = ref({ unitNumber: 1, floorNumber: 1, bedNumber: 4, buildingId: 14 }) //添加宿管的输入信息
@@ -197,6 +197,7 @@ const changeTag = (tag) => { //展示输入框
     tag.popoverVisible = true;
 }
 const doSearch = (tag) => { //确定按钮，搜索
+    if (tag.index !== 2 && tag.index !== 6)
     tag.data = tag.value;
     tag.popoverVisible = false;
     getdormitoryList();
@@ -266,6 +267,8 @@ const AddDetailedDialogFunction = async (value) => {
     }
     let result2 = await dormitoryGetNameListCheckTheSameName(params);
     AddDetailedDialogData4.value = result2.data;
+    clearAddDetailedTag()
+
 }
 const AddDetailedTag = () => {  
     AddDetailedDialogInputShow.value = true;
@@ -332,6 +335,14 @@ const DeleteDormitory = (id) => {    //删除楼栋
             })
         })
 }
+
+onActivated(()=>{
+    tagData.value[2].data='';tagData.value[2].value='';
+    tagData.value[6].data='';tagData.value[6].value='';
+    getdormitoryList()
+    getManagerList();
+    getBuildingList();
+})
 </script>
 <template>
     <el-card style="min-height: 99%;">
@@ -411,7 +422,7 @@ const DeleteDormitory = (id) => {    //删除楼栋
                     <el-button-group>
                         <el-button color="#626aef" :dark=" isDark " plain :icon=" View " @click="SeeDormitoryInfo(row)" />
                         <el-button color="#E6A23C" :dark=" isDark " plain :icon=" Edit " @click="SeeUpdateDialog(row.id)" />
-                        <el-button color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
+                        <el-button v-if="row.id!==1" color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
                             @click="DeleteDormitory(row.id)" />
                     </el-button-group>
                 </template>

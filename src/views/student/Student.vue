@@ -1,7 +1,7 @@
 <script setup>
 
 import { Edit, Delete, Plus, Search, Refresh,View } from '@element-plus/icons-vue'
-import { ref, provide } from 'vue'
+import { ref, provide ,onActivated} from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getStudentListService,getStudentByIdService } from '@/api/student.js'
 import { useRouter } from 'vue-router';
@@ -235,6 +235,7 @@ const nationList = ref([
 ]
 )
 const nationValue = ref("汉族")
+
 const pageInfo = ref({  //分页条的信息
   pageNum: 1,
   pageSize: 5,
@@ -267,7 +268,7 @@ const getStudentList = async () => {
   pageInfo.value.total = result.data.total;
   studentList.value = result.data.items;
 }
-getStudentList()
+
 const sortChange = (data) => {  //排序选择
     if (data.order === null) {
         sortData.value.prop = '';
@@ -282,18 +283,25 @@ const sortChange = (data) => {  //排序选择
 const SeeBuildingInfo = (studentId)=>{
   router.push({name:'studentInfo',params:{studentId}})
 }
-/* ----------------------------------------------------------------------------------------------------------------- */
+/* --------------------------------------------批量添加页面----------------------------------------------------------------- */
 const PushToAddStudentVue = ()=>{
   router.push({name:'studentAdd'})
 }
-/* ----------------------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------修改页面------------------------------------------------------------------------- */
+const GoToUpdateVue = (studentId)=>{
+  router.push({name:'studentUpdate',params:{studentId}})
+}
+/* ------------------------------------------------------------------------------------------------------ */
 const clazzNameForm = (row, column, cellValue, index) => { //表格的方法，格式化展示的数据 
-    return cellValue + '班';
+    return row.clazzYear+'级'+ cellValue + '班';
 }
 const dormitoryNameForm = (row,column,cellValue,index)=>{ //格式化寝室名称
   return row.unitNumber+'单元'+row.floorNumber+'楼'+cellValue
 }
 
+onActivated(()=>{
+  getStudentList()
+})
 </script>
 
 <template>
@@ -321,7 +329,7 @@ const dormitoryNameForm = (row,column,cellValue,index)=>{ //格式化寝室名�
         <template #default="{ row }">
           <el-button-group>
             <el-button color="#626aef" :dark="isDark" plain :icon="View" @click="SeeBuildingInfo(row.id)" />
-            <el-button color="#E6A23C" :dark="isDark" plain :icon="Edit" @click="SeeUpdateDialog(row.id)" />
+            <el-button color="#E6A23C" :dark="isDark" plain :icon="Edit" @click="GoToUpdateVue(row.id)" />
             <el-button color="#F56C6C" :dark="isDark" plain :icon="Delete" @click="DeleteInstitute(row.id)" />
           </el-button-group>
         </template>

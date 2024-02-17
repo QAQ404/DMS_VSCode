@@ -1,6 +1,6 @@
 <script setup>
 import { Edit, Delete, View, AddLocation, Search, Refresh } from '@element-plus/icons-vue'
-import { ref, provide } from 'vue'
+import { ref, provide ,onActivated} from 'vue'
 import { buildingGetListService, buildingAddService, buildingGetInfoByIdService, buildingUpdateInfoService, buildingDeleteService } from '@/api/building.js'
 import { managerGetOnlyNameService, managerChangeBuildingNumberService } from '@/api/manager.js'
 import { dormitoryGetMaxUnitAndFloorService } from '@/api/dormitory.js'
@@ -43,7 +43,6 @@ const getBuildingList = async () => {     //获取楼栋集合功能
     pageInfo.value.total = result.data.total;
     buildings.value = result.data.items;
 }
-getBuildingList();
 
 const sortChange = (data) => {  //排序选择
     if (data.order === null) {
@@ -72,7 +71,7 @@ const getManagerList = async () => {  //获取全体管理员的名字和工作�
     let result = await managerGetOnlyNameService();
     managerList.value = result.data;
 }
-getManagerList();
+
 /* ---------------------------------------------------添加楼栋弹窗---------------------------------------------------------- */
 import AddQuicklyDialogVue from '@/components/addQuicklyDialog.vue'
 const ifShowAddQuicklyDialogVue = ref(false) //添加楼栋弹窗是否显示
@@ -180,6 +179,11 @@ const DeleteBuilding = (id) => {    //删除楼栋
         })
 }
 
+onActivated(()=>{
+    searchData.value.manager_id = '';
+    getBuildingList();
+    getManagerList();
+})
 </script>
 
 <template>
@@ -220,7 +224,7 @@ const DeleteBuilding = (id) => {    //删除楼栋
                     <el-button-group>
                         <el-button color="#626aef" :dark="isDark" plain :icon="View" @click="SeeBuildingInfo(row.id)" />
                         <el-button color="#E6A23C" :dark="isDark" plain :icon="Edit" @click="SeeUpdateDialog(row.id)" />
-                        <el-button color="#F56C6C" :dark="isDark" plain :icon="Delete" @click="DeleteBuilding(row.id)" />
+                        <el-button v-if="row.id!==14" color="#F56C6C" :dark="isDark" plain :icon="Delete" @click="DeleteBuilding(row.id)" />
                     </el-button-group>
                 </template>
             </el-table-column>

@@ -1,6 +1,6 @@
 <script setup>
 import { Plus, Edit, Delete, Key, Search, Refresh } from '@element-plus/icons-vue'
-import { ref, provide } from 'vue'
+import { ref, provide,onActivated } from 'vue'
 import { managerGetListService, managerAddService, managerUpdateService, managerGetByIdService, managerUpdatePasswordService, managerDeleteService } from '@/api/manager.js'
 import defaultPicture from '@/assets/default.jpg'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -40,7 +40,6 @@ const getManagerList = async () => { //获取宿管信息功能
     managerList.value = result.data.items;
     pageInfo.value.total = result.data.total;
 }
-getManagerList()
 
 const sortChange = (data) => {  //排序选择
     if (data.order === null) {
@@ -165,7 +164,9 @@ const DeleteManager = (row) => { //删除宿管
             })
         })
 }
-
+onActivated(()=>{
+    getManagerList()
+})
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup>
 import { Edit, Delete, AddLocation, Search, Refresh } from '@element-plus/icons-vue'
-import { ref, provide } from 'vue'
+import { ref, provide ,onActivated} from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {updateInstituteService, instituteGetInstituteListService,instituteAddService,instituteDeleteService, instituteGetInstituteNameService} from '@/api/institute.js'
 
@@ -39,7 +39,6 @@ const getInstituteList = async () => {
     pageInfo.value.total = result.data.total;
     instituteList.value = result.data.items;
 }
-getInstituteList()
 const sortChange = (data) => {  //排序选择
     if (data.order === null) {
         sortData.value.prop = '';
@@ -143,6 +142,10 @@ const DeleteInstitute = (id) => {    //删除
             })
         })
 }
+
+onActivated(()=>{
+    getInstituteList()
+})
 </script>
 
 <template>

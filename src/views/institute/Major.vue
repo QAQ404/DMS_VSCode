@@ -1,6 +1,6 @@
 <script setup>
 import { Edit, Delete, AddLocation, Search, Refresh } from '@element-plus/icons-vue'
-import { ref, provide } from 'vue'
+import { ref, provide ,onActivated} from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { majorGetMajorListService ,majorAddService,majorGetMajorByIdService,updateMajorService,majorDeleteService} from '@/api/major.js'
 import { instituteGetInstituteNameListService } from '@/api/institute.js'
@@ -28,7 +28,6 @@ const getInstituteList = async ()=>{
     let result = await instituteGetInstituteNameListService();
     instituteList.value = result.data;
 }
-getInstituteList()
 
 const searchData = ref({})  //搜索栏数据
 const majorList = ref([])
@@ -47,7 +46,6 @@ const getMajorList = async () => {
     pageInfo.value.total = result.data.total;
     majorList.value = result.data.items;
 }
-getMajorList()
 const sortChange = (data) => {  //排序选择
     if (data.order === null) {
         sortData.value.prop = '';
@@ -152,6 +150,12 @@ const DeleteInstitute = (id) => {    //删除
             })
         })
 }
+
+onActivated(()=>{
+    searchData.value.insName = ''
+    getMajorList()
+    getInstituteList()
+})
 </script>
 
 <template>

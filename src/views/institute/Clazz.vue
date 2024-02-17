@@ -1,6 +1,6 @@
 <script setup>
 import { Edit, Delete, AddLocation, Search, Refresh } from '@element-plus/icons-vue'
-import { ref, provide } from 'vue'
+import { ref, provide ,onActivated} from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { clazzGetClazzListService, clazzAddService, clazzGetClazzByIdService, updateClazzService, clazzDeleteService } from '@/api/clazz.js'
 import { majorGetMajorNameListService } from '@/api/major.js'
@@ -29,7 +29,7 @@ const getInstituteList = async () => {
     let result = await instituteGetInstituteNameListService();
     instituteList.value = result.data;
 }
-getInstituteList()
+
 
 const searchData = ref({})  //搜索栏数据
 const majorList = ref([])
@@ -56,7 +56,7 @@ const getClazzList = async () => {
     pageInfo.value.total = result.data.total;
     clazzList.value = result.data.items;
 }
-getClazzList()
+
 const sortChange = (data) => {  //排序选择
     if (data.order === null) {
         sortData.value.prop = '';
@@ -177,6 +177,14 @@ const DeleteInstitute = (id) => {    //删除楼栋
 const nameForm = (row, column, cellValue, index) => { //表格的方法，格式化展示的数据 
     return cellValue + '班';
 }
+
+onActivated(()=>{
+    searchData.value.insName = '';
+    searchData.value.majorName = '';
+    selectSearchDisabled.value = true;
+    getInstituteList()
+    getClazzList()
+})
 </script>
 
 <template>

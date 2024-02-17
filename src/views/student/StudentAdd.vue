@@ -1,13 +1,15 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, provide } from 'vue'
+import { ref, provide, onActivated } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Delete, Refresh, Plus } from '@element-plus/icons-vue'
+import { Delete, Refresh, Plus, Select } from '@element-plus/icons-vue'
 import { clazzGetClazzListCascaderService } from '@/api/clazz.js'
+import { AddStudentService } from '@/api/student.js'
 const router = useRouter();
 const backStudentVue = () => {
     router.back();
 }
+
 const AddStudentList = ref([])
 const SelectAddStudentList = ref([])
 const clazzList = ref([])
@@ -16,8 +18,9 @@ const getClazzList = async () => {
     clazzList.value = result.data;
 }
 getClazzList()
+
 const AddTableColumn = () => {
-    AddStudentList.value.push({ gender: '男', entranceYear: '2020', password: '123456' })
+    AddStudentList.value.push({ name: '', gender: '男', entranceYear: '2020', studyId: '', password: '123456', clazzId: '' })
 }
 const deleteTableColumn = (index) => {
     ElMessageBox.confirm(
@@ -69,8 +72,70 @@ const clearTableColumn = () => {
             })
         })
 }
-const check = () => {
+const submitAddStudent = async () => {
     console.log(AddStudentList.value);
+    ElMessageBox.confirm(
+        '是否确认添加',
+        '温馨提示',
+        {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(async () => {
+            let ifReturn = false;
+            let ifReturn2 = false;
+            let ifReturn3 = false;
+            AddStudentList.value.forEach((item, i) => {
+                if (!ifReturn) {
+                    if (item.name === '' || item.entranceYear === null || item.studyId === '' || item.password === '' || item.clazzId === '') {
+                        ElMessage.error("输入不能为空");
+                        ifReturn = true;
+                    }
+                }
+                if (!ifReturn2) {
+                    if (item.name.length>20) {
+                        ElMessage.error(item.name+":姓名需小于20位");
+                        ifReturn2 = true;
+                    }
+                    else if(item.studyId.length>20){
+                        ElMessage.error(item.studyId+":学号需小于20位");
+                        ifReturn2 = true;
+                    }
+                    else if(item.password.length>20){
+                        ElMessage.error(item.password+":密码需小于20位");
+                        ifReturn2 = true;
+                    }
+                }
+            })
+            for(var i=0;i<AddStudentList.value.length;i++){
+                for(var j = i+1;j<AddStudentList.value.length && !ifReturn3;j++){
+                    if(AddStudentList.value[i].studyId == AddStudentList.value[j].studyId){
+                        ifReturn3 = true;
+                        ElMessage.error(AddStudentList.value[i].studyId+":输入重复学号");
+                        break;
+                    }
+                }
+                if(ifReturn3) break;
+            }
+            if (ifReturn) return;
+            if (ifReturn2) return;
+            if (ifReturn3) return;
+            let result = await AddStudentService(AddStudentList.value);
+            AddStudentList.value = ref([]).value
+            router.push({ name: 'student' })
+            ElMessage({
+                type: 'success',
+                message: '添加成功',
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '取消添加',
+            })
+        })
 }
 /* --------------------------------------多选框----------------------------------------------------------------------- */
 const handleSelectionChange = (val) => {
@@ -113,6 +178,12 @@ const SelectManyChange = (row, id) => {
 }
 /* ---------------------------------------------------------------------------------------------------------- */
 
+onActivated(() => {
+    getClazzList();
+    AddStudentList.value.forEach((item, i) => {
+        item.clazzId = ''
+    })
+})
 </script>
 
 <template>
@@ -182,7 +253,7 @@ const SelectManyChange = (row, id) => {
         <div style="margin-top: 5px;">
             <el-button @click="AddTableColumn" type="primary" :icon="Plus">添加</el-button>
             <el-button @click="clearTableColumn" type='warning' :icon="Refresh">清空</el-button>
-            <el-button @click="check">查看</el-button>
+            <el-button @click="submitAddStudent" type='success' :icon="Select">确认</el-button>
         </div>
     </el-card>
 </template>

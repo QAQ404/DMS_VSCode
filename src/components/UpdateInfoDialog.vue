@@ -27,6 +27,7 @@ const UpdateInfoDialogType = inject('UpdateInfoDialogType')
 const UpdateInfoDialogData = inject('UpdateInfoDialogData')
 const UpdateInfoDialogData2 = inject('UpdateInfoDialogData2')
 const UpdateInfoDialogData3 = inject('UpdateInfoDialogData3')
+const UpdateInfoDialogData4 = inject('UpdateInfoDialogData4')
 
 const getReturnData = inject('getReturnData')
 const addDataBack = () => {
