@@ -73,7 +73,7 @@ onActivated(() => {
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label> 寝室 </template>
-                {{ studentInfoData.unitNumber }}单元 {{ studentInfoData.floorNumber }}楼 {{ studentInfoData.buildingName }}
+                {{ studentInfoData.unitNumber }}单元 {{ studentInfoData.floorNumber }}楼 {{ studentInfoData.dormitoryName }}
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label> 民族 </template>

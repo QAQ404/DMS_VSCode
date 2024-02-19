@@ -11,3 +11,7 @@ export const getStudentByIdService = (id)=>{
 export const AddStudentService = (data)=>{
     return request.post('/student/addStudent',data)
 }
+
+export const UpdateStudentInfoService = (data)=>{
+    return request.put('/student/updateStudentInfo',data)
+}

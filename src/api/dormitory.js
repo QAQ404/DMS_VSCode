@@ -26,3 +26,7 @@ export const dormitoryGetNameListCheckTheSameName = (data)=>{
 export const dormitoryAddManyService = (data)=>{
     return request.post('/dormitory/addDormitoryMany',data)
 }
+
+export const dormitoryGetDormitoryListCascaderService = ()=>{
+    return request.get('/dormitory/getDormitoryListCascader')
+}
