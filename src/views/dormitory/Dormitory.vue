@@ -1,12 +1,14 @@
 <script setup>
 import { Plus, Edit, Delete, View, Refresh, Check } from '@element-plus/icons-vue'
-import { ref, provide, nextTick ,onActivated} from 'vue'
+import { ref, provide, nextTick, onActivated } from 'vue'
 import defaultPicture from '@/assets/default2.jpg'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { dormitoryAddManyService, dormitoryGetNameListCheckTheSameName, dormitoryDeleteService, dormitoryGetListService, dormitoryAddService, dormitoryGetDormitoryByIdService, dormitoryUpdateInfoService } from '@/api/dormitory.js'
 import { buildingGetOnlyNameService, buildingGetUnitAndFloorService } from '@/api/building.js'
+import {  studentDeleteService } from '@/api/student.js'
 import { managerGetOnlyNameService } from '@/api/manager.js'
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const pageInfo = ref({  //分页条的信息
     pageNum: 1,
@@ -27,12 +29,12 @@ const sortData = ref({  //选择排序的数据
 })
 
 const tagData = ref([
-    { label: '寝室姓名：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 1, index: 0 , data: ''},
+    { label: '寝室姓名：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 1, index: 0, data: '' },
     { label: '所在单元：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 1, data: '' },
     { label: '所在楼栋：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 3, index: 2, data: '' },
-    { label: '所在楼层：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 3 , data: ''},
-    { label: '学生数：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 4 , data: ''},
-    { label: '床位：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 5 , data: ''},
+    { label: '所在楼层：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 3, data: '' },
+    { label: '学生数：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 4, data: '' },
+    { label: '床位：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 5, data: '' },
     { label: '宿管：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 4, index: 6, data: '' },
 ]) //标签组
 const dormitoryList = ref([])
@@ -174,21 +176,21 @@ provide('changeifShowSeeInfoDialogVue', (newISSIDV) => {
 /* ------------------------------------------------搜索--------------------------------------------------------------- */
 const handleClose = (tag) => { //删除标签
     tag.ifShow = false; tag.popoverVisible = false;
-    tag.value = '';tag.data = '';
+    tag.value = ''; tag.data = '';
     getdormitoryList();
 }
 const addSearchTag = (command) => { //添加标签
     tagData.value[command].ifShow = true;
     if (command == 0) tagData.value[command].value = '';
-    else if (command == 1 || command == 3){ tagData.value[command].value = 1;tagData.value[command].data = 1;}
-    else if (command == 4) {tagData.value[command].value = 0;tagData.value[command].data = 0;}
-    else if (command == 5) {tagData.value[command].value = 4;tagData.value[command].data=4;}
+    else if (command == 1 || command == 3) { tagData.value[command].value = 1; tagData.value[command].data = 1; }
+    else if (command == 4) { tagData.value[command].value = 0; tagData.value[command].data = 0; }
+    else if (command == 5) { tagData.value[command].value = 4; tagData.value[command].data = 4; }
     else if (command == 6) { tagData.value[command].value = ''; tagData.value[command].data = '' }
     else if (command == 2) { tagData.value[command].value = ''; tagData.value[command].data = '' }
     getdormitoryList();
 }
 const clearSearchData = () => {  //清空搜索框
-    for (const i of tagData.value) { i.ifShow = false; i.popoverVisible = false; i.value = '' ;i.data=''}
+    for (const i of tagData.value) { i.ifShow = false; i.popoverVisible = false; i.value = ''; i.data = '' }
     getdormitoryList();
 }
 const changeTag = (tag) => { //展示输入框
@@ -198,7 +200,7 @@ const changeTag = (tag) => { //展示输入框
 }
 const doSearch = (tag) => { //确定按钮，搜索
     if (tag.index !== 2 && tag.index !== 6)
-    tag.data = tag.value;
+        tag.data = tag.value;
     tag.popoverVisible = false;
     getdormitoryList();
 }
@@ -253,7 +255,7 @@ const SeeAddDetailedDialog = async () => { //打开批量添加对话框，初�
 const closeAddDetailedDialog = () => { //关闭对话框
     ifShowAddDetailedDialog.value = false;
 }
-const AddDetailedDialogFunction = async (value) => { 
+const AddDetailedDialogFunction = async (value) => {
     let result = await buildingGetUnitAndFloorService(value);
     AddDetailedDialogData3.value = result.data;
     if (AddDetailedDialogData3.value.unitNumber < AddDetailedDialogData.value.unitNumber)
@@ -270,7 +272,7 @@ const AddDetailedDialogFunction = async (value) => {
     clearAddDetailedTag()
 
 }
-const AddDetailedTag = () => {  
+const AddDetailedTag = () => {
     AddDetailedDialogInputShow.value = true;
     nextTick(() => {
         refInput.value.focus()
@@ -278,7 +280,7 @@ const AddDetailedTag = () => {
 }
 const handleInputConfirm = () => {
     if (AddDetailedDialogInputData.value) {
-        if(AddDetailedDialogInputData.value.length > 10) {
+        if (AddDetailedDialogInputData.value.length > 10) {
             ElMessage.error("名称需小于10位"); return;
         }
         for (const i of AddDetailedDialogData.value.nameList) {
@@ -335,10 +337,46 @@ const DeleteDormitory = (id) => {    //删除楼栋
             })
         })
 }
+/* ----------------------------子表格------------------------------------------------------------------ */
+const clazzNameForm = (row, column, cellValue, index) => { //表格的方法，格式化展示的数据 
+    return row.clazzYear + '级' + cellValue + '班';
+}
+const SeeBuildingInfo = (studentId) => {
+  router.push({ name: 'studentInfo', params: { studentId } })
+}
+const GoToUpdateVue = (studentId) => {
+  router.push({ name: 'studentUpdate', params: { studentId } })
+}
+const DeleteStudent = (id) => {
+  ElMessageBox.confirm(
+    '是否确认删除',
+    '温馨提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(async () => {
+      let result = await studentDeleteService(id);
+      ElMessage({
+        type: 'success',
+        message: '成功删除',
+      })
+      getdormitoryList();
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      })
+    })
+}
+/* --------------------------------------------------------------------------------------- */
 
-onActivated(()=>{
-    tagData.value[2].data='';tagData.value[2].value='';
-    tagData.value[6].data='';tagData.value[6].value='';
+onActivated(() => {
+    tagData.value[2].data = ''; tagData.value[2].value = '';
+    tagData.value[6].data = ''; tagData.value[6].value = '';
     getdormitoryList()
     getManagerList();
     getBuildingList();
@@ -374,20 +412,27 @@ onActivated(()=>{
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
-                    <div v-for="               tag                in                tagData               " :key=" tag ">
-                        <el-popover :visible=" tag.popoverVisible " placement="bottom" :width=" 140 " style="user-select: none;">
-                            <el-input v-model=" tag.value " size="small" v-if=" tag.inputType === 1 " style="user-select: none;"/>
-                            <el-input-number v-model=" tag.value " size="small" v-else-if=" tag.inputType === 2 " style="user-select: none;"
-                                :min=" 0 " />
+                    <div v-for="                  tag                   in                   tagData                  "
+                        :key=" tag ">
+                        <el-popover :visible=" tag.popoverVisible " placement="bottom" :width=" 140 "
+                            style="user-select: none;">
+                            <el-input v-model=" tag.value " size="small" v-if=" tag.inputType === 1 "
+                                style="user-select: none;" />
+                            <el-input-number v-model=" tag.value " size="small" v-else-if=" tag.inputType === 2 "
+                                style="user-select: none;" :min=" 0 " />
                             <el-select v-model=" tag.data " filterable style="width: 130px;user-select: none;"
                                 v-else-if=" tag.inputType === 3 " @change="selectBuildingChange(tag)" size="small">
-                                <el-option v-for="             item              in              buildingList             "
-                                    :key=" item.value " :label=" item.label " :value=" item.value "  style="user-select: none;"/>
+                                <el-option
+                                    v-for="                item                 in                 buildingList                "
+                                    :key=" item.value " :label=" item.label " :value=" item.value "
+                                    style="user-select: none;" />
                             </el-select>
                             <el-select v-model=" tag.data " filterable style="width: 130px;user-select: none;"
                                 @change="selectManagerChange(tag)" v-else-if=" tag.inputType === 4 " size="small">
-                                <el-option v-for="             item              in              managerList             "
-                                    :key=" item.value " :label=" item.label " :value=" item.value "  style="user-select: none;"/>
+                                <el-option
+                                    v-for="                item                 in                 managerList                "
+                                    :key=" item.value " :label=" item.label " :value=" item.value "
+                                    style="user-select: none;" />
                             </el-select>
                             <div style="text-align: right; padding-top: 10px;user-select: none;">
                                 <el-button size="small" type="info" @click="doBack(tag)">取消</el-button>
@@ -407,7 +452,31 @@ onActivated(()=>{
         </el-descriptions>
         <!-- 主体表格 -->
         <el-table border :data=" dormitoryList " @sort-change=" sortChange " tooltip-effect="light">
-            <el-table-column type="expand"></el-table-column>
+            <el-table-column type="expand">
+                <template #default="props">
+                    <el-table :data=" props.row.studentList ">
+                        <el-table-column label="姓名" prop="name"></el-table-column>
+                        <el-table-column label="性别" prop="gender"></el-table-column>
+                        <el-table-column label="学号" prop="studyId"></el-table-column>
+                        <el-table-column label="年级" prop="entranceYear"></el-table-column>
+                        <el-table-column label="学院" prop="insName"></el-table-column>
+                        <el-table-column label="专业" prop="majorName"></el-table-column>
+                        <el-table-column label="班级" prop="clazzName" :formatter=" clazzNameForm "></el-table-column>
+                        <el-table-column label="操作" fix="right" width="170">
+                            <template #default="{ row }">
+                                <el-button-group>
+                                    <el-button color="#626aef" :dark=" isDark " plain :icon=" View "
+                                        @click="SeeBuildingInfo(row.id)" />
+                                    <el-button color="#E6A23C" :dark=" isDark " plain :icon=" Edit "
+                                        @click="GoToUpdateVue(row.id)" />
+                                    <el-button color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
+                                        @click="DeleteStudent(row.id)" />
+                                </el-button-group>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </el-table-column>
             <el-table-column label="寝室名称" prop="name" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column label="所在单元" prop="unitNumber" sortable="custom" show-overflow-tooltip
                 width="120"></el-table-column>
@@ -416,13 +485,13 @@ onActivated(()=>{
                 width="120"></el-table-column>
             <el-table-column label="学生数" prop="stuNumber" sortable="custom" show-overflow-tooltip
                 width="120"></el-table-column>
-            <el-table-column label="宿管" prop="manName" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="宿管" prop="manName" sortable="custom" width="120" show-overflow-tooltip></el-table-column>
+            <el-table-column label="操作" fix="right" width="170" >
                 <template #default="{ row }">
                     <el-button-group>
                         <el-button color="#626aef" :dark=" isDark " plain :icon=" View " @click="SeeDormitoryInfo(row)" />
                         <el-button color="#E6A23C" :dark=" isDark " plain :icon=" Edit " @click="SeeUpdateDialog(row.id)" />
-                        <el-button v-if="row.id!==1" color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
+                        <el-button v-if=" row.id !== 1 " color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
                             @click="DeleteDormitory(row.id)" />
                     </el-button-group>
                 </template>
@@ -463,7 +532,7 @@ onActivated(()=>{
             <el-form-item label="所在楼栋">
                 <el-select v-model=" AddDetailedDialogData.buildingId " filterable style="width: 180px"
                     @change="AddDetailedDialogFunction(AddDetailedDialogData.buildingId)">
-                    <el-option v-for="           item            in            AddDetailedDialogData2           "
+                    <el-option v-for="              item               in               AddDetailedDialogData2              "
                         :key=" item.value " :label=" item.label " :value=" item.value " />
                 </el-select>
             </el-form-item>
@@ -472,7 +541,7 @@ onActivated(()=>{
                     <el-space wrap>
                         <el-button :icon=" Refresh " type="warning" plain size="small"
                             @click=" clearAddDetailedTag "></el-button>
-                        <div v-for="      tag       in       AddDetailedDialogData.nameList      " :key=" tag ">
+                        <div v-for="         tag          in          AddDetailedDialogData.nameList         " :key=" tag ">
                             <el-tag closable :disable-transitions=" false " @close="CloseAddDetailedTag(tag)">
                                 <div style="display: flex;">{{ tag }}</div>
                             </el-tag>
@@ -505,5 +574,4 @@ onActivated(()=>{
     align-items: center;
     justify-content: space-between;
     height: 20px;
-}
-</style>
+}</style>

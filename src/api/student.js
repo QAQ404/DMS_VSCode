@@ -15,3 +15,7 @@ export const AddStudentService = (data)=>{
 export const UpdateStudentInfoService = (data)=>{
     return request.put('/student/updateStudentInfo',data)
 }
+
+export const studentDeleteService = (id)=>{
+    return request.delete('/student/deleteStudent?id='+id)
+}

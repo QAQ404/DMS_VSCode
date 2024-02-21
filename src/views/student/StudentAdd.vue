@@ -73,7 +73,6 @@ const clearTableColumn = () => {
         })
 }
 const submitAddStudent = async () => {
-    console.log(AddStudentList.value);
     ElMessageBox.confirm(
         '是否确认添加',
         '温馨提示',

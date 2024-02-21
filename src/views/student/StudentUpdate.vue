@@ -4,7 +4,7 @@ import { ref, provide } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useTokenStore } from '@/stores/token.js';
 import { getStudentByIdService, UpdateStudentInfoService } from '@/api/student.js'
-import {managerUpdatePasswordService} from '@/api/manager.js'
+import { managerUpdatePasswordService } from '@/api/manager.js'
 import { clazzGetClazzListCascaderService } from '@/api/clazz.js'
 import { dormitoryGetDormitoryListCascaderService } from '@/api/dormitory.js'
 import defaultPicture from '@/assets/default.jpg'
@@ -283,7 +283,7 @@ const getDormitoryList = async () => {
 getDormitoryList()
 
 const changeClazzId = () => {
-    studentInfoData.value.clazzId = studentInfoData.value.clazzId[2]
+    studentInfoData.value.clazzId = studentInfoData.value.clazzId[3]
 }
 
 const changeDormitoryId = () => {
@@ -291,12 +291,11 @@ const changeDormitoryId = () => {
 }
 
 const giveUpdate = async () => { //提交修改
-    if (studentInfoData.value.name === '' || studentInfoData.value.entranceYear === null) {
-        ElMessage.error('输入不能为空');
-    }
+    if (studentInfoData.value.name === '') { ElMessage.error('姓名输入不能为空'); }
+    else if (studentInfoData.value.entranceYear === null) { ElMessage.error('入学年份输入不能为空'); }
     else if (studentInfoData.value.name.length > 20) { ElMessage.error("姓名需小于20位"); }
     else if (studentInfoData.value.studentInfo.phone !== null && studentInfoData.value.studentInfo.phone.length > 11) { ElMessage.error("电话需小于11位"); }
-    else if (studentInfoData.value.studentInfo.email!==null && studentInfoData.value.studentInfo.email.length > 128) { ElMessage.error("邮箱长度过长"); }
+    else if (studentInfoData.value.studentInfo.email !== null && studentInfoData.value.studentInfo.email.length > 128) { ElMessage.error("邮箱长度过长"); }
     else {
         ElMessageBox.confirm(
             '是否确认修改',
@@ -335,8 +334,8 @@ const closeUpdatePasswordDialog = () => {
     ifShowUpdatePasswordDialog.value = false;
 }
 const UpdatePassword = async () => {
-    if(updatePasswordData.value.password.length>32) ElMessage.error('密码需小于32位');
-    else{
+    if (updatePasswordData.value.password.length > 32) ElMessage.error('密码需小于32位');
+    else {
         let result = await managerUpdatePasswordService(updatePasswordData.value);
         ElMessage.success(result.message ? result.message : '添加成功');
         closeUpdatePasswordDialog();
@@ -443,7 +442,7 @@ onBeforeRouteLeave((to, from, next) => {
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label> 学号/账号 </template>
-                <el-input v-model="studentInfoData.studyId" class="input-width" disabled/>
+                <el-input v-model="studentInfoData.studyId" class="input-width" disabled />
             </el-descriptions-item>
             <el-descriptions-item>
                 <template #label> 电话 </template>
