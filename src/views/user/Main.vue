@@ -1,5 +1,9 @@
 <script setup>
 import { ref } from 'vue';
+
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
 const a = ref(new Date())
 const b = ()=>{
 alert(a.value.toLocaleDateString().split('/').join('-'))

@@ -19,3 +19,11 @@ export const UpdateStudentInfoService = (data)=>{
 export const studentDeleteService = (id)=>{
     return request.delete('/student/deleteStudent?id='+id)
 }
+
+export const studentUpdateDorService = (data,dorId) =>{
+    return request.put('/student/updateStudentDor?dorId='+dorId,data)
+}
+
+export const studentUpdateStuClazzService = (data,clazzId)=>{
+    return request.put('/student/updateStudentClazz?clazzId='+clazzId,data)
+}

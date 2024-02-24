@@ -6,6 +6,9 @@ import { managerGetOnlyNameService, managerChangeBuildingNumberService } from '@
 import { dormitoryGetMaxUnitAndFloorService } from '@/api/dormitory.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
 const pageInfo = ref({  //分页条的信息
     pageNum: 1,
     pageSize: 5,
@@ -192,7 +195,8 @@ onActivated(()=>{
             <div class="card-header">
                 <span>楼栋信息</span>
                 <div>
-                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="AddLocation">添加楼栋</el-button>
+                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="AddLocation"
+                    v-if="userInfoStore.info.role===3">添加楼栋</el-button>
                 </div>
             </div>
         </template>
@@ -223,8 +227,9 @@ onActivated(()=>{
                 <template #default="{ row }">
                     <el-button-group>
                         <el-button color="#626aef" :dark="isDark" plain :icon="View" @click="SeeBuildingInfo(row.id)" />
-                        <el-button color="#E6A23C" :dark="isDark" plain :icon="Edit" @click="SeeUpdateDialog(row.id)" />
-                        <el-button v-if="row.id!==14" color="#F56C6C" :dark="isDark" plain :icon="Delete" @click="DeleteBuilding(row.id)" />
+                        <el-button color="#E6A23C" :dark="isDark" plain :icon="Edit" v-if="userInfoStore.info.role===3" @click="SeeUpdateDialog(row.id)" />
+                        <el-button v-if="row.id!==14 && userInfoStore.info.role===3" color="#F56C6C" :dark="isDark" plain
+                         :icon="Delete" @click="DeleteBuilding(row.id)"  />
                     </el-button-group>
                 </template>
             </el-table-column>

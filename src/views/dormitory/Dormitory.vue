@@ -5,10 +5,13 @@ import defaultPicture from '@/assets/default2.jpg'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { dormitoryAddManyService, dormitoryGetNameListCheckTheSameName, dormitoryDeleteService, dormitoryGetListService, dormitoryAddService, dormitoryGetDormitoryByIdService, dormitoryUpdateInfoService } from '@/api/dormitory.js'
 import { buildingGetOnlyNameService, buildingGetUnitAndFloorService } from '@/api/building.js'
-import {  studentDeleteService } from '@/api/student.js'
+import { studentDeleteService } from '@/api/student.js'
 import { managerGetOnlyNameService } from '@/api/manager.js'
 import { useRouter } from 'vue-router';
 const router = useRouter();
+
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
 
 const pageInfo = ref({  //分页条的信息
     pageNum: 1,
@@ -33,8 +36,8 @@ const tagData = ref([
     { label: '所在单元：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 1, data: '' },
     { label: '所在楼栋：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 3, index: 2, data: '' },
     { label: '所在楼层：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 3, data: '' },
-    { label: '学生数：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 4, data: '' },
-    { label: '床位：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 5, data: '' },
+    { label: '学生数>=', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 4, data: '' },
+    { label: '空闲床位>=', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 2, index: 5, data: '' },
     { label: '宿管：', value: '', ifShow: false, old: '', popoverVisible: false, inputType: 4, index: 6, data: '' },
 ]) //标签组
 const dormitoryList = ref([])
@@ -55,6 +58,7 @@ const getdormitoryList = async () => {
     let result = await dormitoryGetListService(params);
     pageInfo.value.total = result.data.total;
     dormitoryList.value = result.data.items;
+    SelectAddStudentList.value = ref([]).value;
 }
 
 const sortChange = (data) => {  //排序选择
@@ -184,7 +188,7 @@ const addSearchTag = (command) => { //添加标签
     if (command == 0) tagData.value[command].value = '';
     else if (command == 1 || command == 3) { tagData.value[command].value = 1; tagData.value[command].data = 1; }
     else if (command == 4) { tagData.value[command].value = 0; tagData.value[command].data = 0; }
-    else if (command == 5) { tagData.value[command].value = 4; tagData.value[command].data = 4; }
+    else if (command == 5) { tagData.value[command].value = 1; tagData.value[command].data = 1; }
     else if (command == 6) { tagData.value[command].value = ''; tagData.value[command].data = '' }
     else if (command == 2) { tagData.value[command].value = ''; tagData.value[command].data = '' }
     getdormitoryList();
@@ -341,42 +345,79 @@ const DeleteDormitory = (id) => {    //删除楼栋
 const clazzNameForm = (row, column, cellValue, index) => { //表格的方法，格式化展示的数据 
     return row.clazzYear + '级' + cellValue + '班';
 }
+const lastBedForm = (row, column, cellValue, index) => {
+    return row.bedNumber - row.stuNumber;
+}
 const SeeBuildingInfo = (studentId) => {
-  router.push({ name: 'studentInfo', params: { studentId } })
+    router.push({ name: 'studentInfo', params: { studentId } })
 }
 const GoToUpdateVue = (studentId) => {
-  router.push({ name: 'studentUpdate', params: { studentId } })
+    router.push({ name: 'studentUpdate', params: { studentId } })
 }
 const DeleteStudent = (id) => {
-  ElMessageBox.confirm(
-    '是否确认删除',
-    '温馨提示',
-    {
-      confirmButtonText: '确认',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(async () => {
-      let result = await studentDeleteService(id);
-      ElMessage({
-        type: 'success',
-        message: '成功删除',
-      })
-      getdormitoryList();
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消删除',
-      })
-    })
+    ElMessageBox.confirm(
+        '是否确认删除',
+        '温馨提示',
+        {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        }
+    )
+        .then(async () => {
+            let result = await studentDeleteService(id);
+            ElMessage({
+                type: 'success',
+                message: '成功删除',
+            })
+            getdormitoryList();
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '取消删除',
+            })
+        })
 }
+/* ----------------------------多选----------------------------------------------------------- */
+const SelectAddStudentList = ref([])
+const SelectAddStudentRef = ref()
+const handleSelectionChange = (val) => {
+    SelectAddStudentList.value = val
+}
+const headClick = (row, column, cell, event) => {
+    if (column.label !== '操作') {
+        dormitoryList.value.forEach((item, i) => {
+            if (item !== row)
+                SelectAddStudentRef.value.toggleRowExpansion(item, false)
+        })
+        SelectAddStudentRef.value.toggleRowExpansion(row)
+        SelectAddStudentList.value = ref([]).value;
+    }
+}
+const getRowKeys = (row) => {
+    return row.id;
+}
+/* ----------------------------------批量迁入----------------------------------------------------- */
+import UpdateStuDorDialogVue from '@/components/UpdateStuDorDialog.vue'
+const ifShowUpdateStuDorDialogVue = ref(false);
+const UpdateStuDorDialogData = ref()
+const selectMany = () => {
+    UpdateStuDorDialogData.value = SelectAddStudentList.value;
+    ifShowUpdateStuDorDialogVue.value = true;
+}
+provide('changeIfShowUpdateStuDorDialogVue', (newISUIDV, ifF5) => {
+    ifShowUpdateStuDorDialogVue.value = newISUIDV;
+    if (ifF5) { getdormitoryList(); }
+})
+provide('UpdateStuDorDialogData', UpdateStuDorDialogData)
+provide('ifShowUpdateStuDorDialogVue', ifShowUpdateStuDorDialogVue)
 /* --------------------------------------------------------------------------------------- */
 
 onActivated(() => {
     tagData.value[2].data = ''; tagData.value[2].value = '';
     tagData.value[6].data = ''; tagData.value[6].value = '';
+    // 
     getdormitoryList()
     getManagerList();
     getBuildingList();
@@ -387,10 +428,18 @@ onActivated(() => {
         <template #header>
             <div class="card-header">
                 <span>寝室信息</span>
-                <div>
-                    <el-button type="primary" plain @click="SeeAddDetailedDialog" :icon="Plus">批量添加</el-button>
-                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="Plus">添加寝室</el-button>
-                </div>
+                <el-space>
+                    <el-button type="primary" plain @click="selectMany"  v-if="userInfoStore.info.role===3" >批量迁入寝室</el-button>
+                    <el-dropdown trigger="click" placement="bottom-start" v-if="userInfoStore.info.role===3">
+                        <el-button :icon="Plus" type="primary" plain >添加寝室</el-button>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="SeeAddDetailedDialog">批量添加寝室</el-dropdown-item>
+                                <el-dropdown-item @click="SeeAddQuicklyDialog">添加单个寝室</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                </el-space>
             </div>
         </template>
         <!-- 搜索栏 -->
@@ -406,13 +455,13 @@ onActivated(() => {
                                 <el-dropdown-item command="1" :disabled=" tagData[1].ifShow ">所在单元</el-dropdown-item>
                                 <el-dropdown-item command="2" :disabled=" tagData[2].ifShow ">所在楼栋</el-dropdown-item>
                                 <el-dropdown-item command="3" :disabled=" tagData[3].ifShow ">所在楼层</el-dropdown-item>
-                                <el-dropdown-item command="4" :disabled=" tagData[4].ifShow ">学生数</el-dropdown-item>
-                                <el-dropdown-item command="5" :disabled=" tagData[5].ifShow ">床位</el-dropdown-item>
+                                <el-dropdown-item command="4" :disabled=" tagData[4].ifShow ">学生数不少于</el-dropdown-item>
+                                <el-dropdown-item command="5" :disabled=" tagData[5].ifShow ">空闲床位不少于</el-dropdown-item>
                                 <el-dropdown-item command="6" :disabled=" tagData[6].ifShow ">宿管</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
-                    <div v-for="                  tag                   in                   tagData                  "
+                    <div v-for="                      tag                       in                       tagData                      "
                         :key=" tag ">
                         <el-popover :visible=" tag.popoverVisible " placement="bottom" :width=" 140 "
                             style="user-select: none;">
@@ -423,14 +472,14 @@ onActivated(() => {
                             <el-select v-model=" tag.data " filterable style="width: 130px;user-select: none;"
                                 v-else-if=" tag.inputType === 3 " @change="selectBuildingChange(tag)" size="small">
                                 <el-option
-                                    v-for="                item                 in                 buildingList                "
+                                    v-for="                    item                     in                     buildingList                    "
                                     :key=" item.value " :label=" item.label " :value=" item.value "
                                     style="user-select: none;" />
                             </el-select>
                             <el-select v-model=" tag.data " filterable style="width: 130px;user-select: none;"
                                 @change="selectManagerChange(tag)" v-else-if=" tag.inputType === 4 " size="small">
                                 <el-option
-                                    v-for="                item                 in                 managerList                "
+                                    v-for="                    item                     in                     managerList                    "
                                     :key=" item.value " :label=" item.label " :value=" item.value "
                                     style="user-select: none;" />
                             </el-select>
@@ -451,33 +500,38 @@ onActivated(() => {
             </el-descriptions-item>
         </el-descriptions>
         <!-- 主体表格 -->
-        <el-table border :data=" dormitoryList " @sort-change=" sortChange " tooltip-effect="light">
-            <el-table-column type="expand">
+        <el-table border :data=" dormitoryList " @sort-change=" sortChange " tooltip-effect="light"
+            ref="SelectAddStudentRef" @cell-click=" headClick " highlight-current-row>
+            <el-table-column type="expand" width="1">
                 <template #default="props">
-                    <el-table :data=" props.row.studentList ">
-                        <el-table-column label="姓名" prop="name"></el-table-column>
-                        <el-table-column label="性别" prop="gender"></el-table-column>
-                        <el-table-column label="学号" prop="studyId"></el-table-column>
-                        <el-table-column label="年级" prop="entranceYear"></el-table-column>
-                        <el-table-column label="学院" prop="insName"></el-table-column>
-                        <el-table-column label="专业" prop="majorName"></el-table-column>
-                        <el-table-column label="班级" prop="clazzName" :formatter=" clazzNameForm "></el-table-column>
+                    <el-table :data=" props.row.studentList " @selection-change=" handleSelectionChange "
+                        :row-key=" getRowKeys ">
+                        <el-table-column type="selection" width="55" fixed="left"
+                            :reserve-selection=' true ' v-if="userInfoStore.info.role===3"></el-table-column>
+                        <el-table-column label="姓名" width="120" prop="name"></el-table-column>
+                        <el-table-column label="性别" width="80" prop="gender"></el-table-column>
+                        <el-table-column label="学号" width="140" prop="studyId"></el-table-column>
+                        <el-table-column label="年级" width="80" prop="entranceYear"></el-table-column>
+                        <el-table-column label="学院" width="120" prop="insName"></el-table-column>
+                        <el-table-column label="专业" width="120" prop="majorName"></el-table-column>
+                        <el-table-column label="班级" width="120" prop="clazzName"
+                            :formatter=" clazzNameForm "></el-table-column>
                         <el-table-column label="操作" fix="right" width="170">
                             <template #default="{ row }">
                                 <el-button-group>
                                     <el-button color="#626aef" :dark=" isDark " plain :icon=" View "
                                         @click="SeeBuildingInfo(row.id)" />
                                     <el-button color="#E6A23C" :dark=" isDark " plain :icon=" Edit "
-                                        @click="GoToUpdateVue(row.id)" />
+                                        @click="GoToUpdateVue(row.id)"  v-if="userInfoStore.info.role===3||(userInfoStore.info.role===2&&userInfoStore.info.id===row.managerId) " />
                                     <el-button color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
-                                        @click="DeleteStudent(row.id)" />
+                                        @click="DeleteStudent(row.id)"  v-if="userInfoStore.info.role===3"/>
                                 </el-button-group>
                             </template>
                         </el-table-column>
                     </el-table>
                 </template>
             </el-table-column>
-            <el-table-column label="寝室名称" prop="name" sortable="custom" show-overflow-tooltip></el-table-column>
+            <el-table-column width="120" label="寝室名称" prop="name" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column label="所在单元" prop="unitNumber" sortable="custom" show-overflow-tooltip
                 width="120"></el-table-column>
             <el-table-column label="所在楼栋" prop="buildingName" sortable="custom" show-overflow-tooltip></el-table-column>
@@ -485,13 +539,16 @@ onActivated(() => {
                 width="120"></el-table-column>
             <el-table-column label="学生数" prop="stuNumber" sortable="custom" show-overflow-tooltip
                 width="120"></el-table-column>
-            <el-table-column label="宿管" prop="manName" sortable="custom" width="120" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作" fix="right" width="170" >
+            <el-table-column label="空闲床位" prop="bedNumber" sortable="custom" show-overflow-tooltip width="120"
+                :formatter=" lastBedForm "></el-table-column>
+            <el-table-column label="宿管" prop="manName" sortable="custom" width="120"
+                show-overflow-tooltip></el-table-column>
+            <el-table-column label="操作" fix="right" width="170">
                 <template #default="{ row }">
                     <el-button-group>
                         <el-button color="#626aef" :dark=" isDark " plain :icon=" View " @click="SeeDormitoryInfo(row)" />
-                        <el-button color="#E6A23C" :dark=" isDark " plain :icon=" Edit " @click="SeeUpdateDialog(row.id)" />
-                        <el-button v-if=" row.id !== 1 " color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
+                        <el-button color="#E6A23C" :dark=" isDark " plain :icon=" Edit " @click="SeeUpdateDialog(row.id)" v-if="userInfoStore.info.role===3" />
+                        <el-button v-if=" row.id !== 1 && userInfoStore.info.role===3" color="#F56C6C" :dark=" isDark " plain :icon=" Delete "
                             @click="DeleteDormitory(row.id)" />
                     </el-button-group>
                 </template>
@@ -532,7 +589,8 @@ onActivated(() => {
             <el-form-item label="所在楼栋">
                 <el-select v-model=" AddDetailedDialogData.buildingId " filterable style="width: 180px"
                     @change="AddDetailedDialogFunction(AddDetailedDialogData.buildingId)">
-                    <el-option v-for="              item               in               AddDetailedDialogData2              "
+                    <el-option
+                        v-for="                  item                   in                   AddDetailedDialogData2                  "
                         :key=" item.value " :label=" item.label " :value=" item.value " />
                 </el-select>
             </el-form-item>
@@ -541,7 +599,8 @@ onActivated(() => {
                     <el-space wrap>
                         <el-button :icon=" Refresh " type="warning" plain size="small"
                             @click=" clearAddDetailedTag "></el-button>
-                        <div v-for="         tag          in          AddDetailedDialogData.nameList         " :key=" tag ">
+                        <div v-for="             tag              in              AddDetailedDialogData.nameList             "
+                            :key=" tag ">
                             <el-tag closable :disable-transitions=" false " @close="CloseAddDetailedTag(tag)">
                                 <div style="display: flex;">{{ tag }}</div>
                             </el-tag>
@@ -566,6 +625,7 @@ onActivated(() => {
     <AddQuicklyDialogVue />
     <UpdateInfoDialogVue />
     <SeeInfoDialogVue />
+    <UpdateStuDorDialogVue />
 </template>
 
 <style scoped>
@@ -574,4 +634,8 @@ onActivated(() => {
     align-items: center;
     justify-content: space-between;
     height: 20px;
+}
+
+:deep(.el-table__expand-icon) {
+    display: none;
 }</style>

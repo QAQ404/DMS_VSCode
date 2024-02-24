@@ -4,6 +4,9 @@ import { ref, provide, onActivated } from 'vue'
 import { getStudentByIdService } from '@/api/student.js'
 import defaultPicture from '@/assets/default.jpg'
 
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
 const router = useRouter();
 const route = useRoute();
 let studentId = route.params.studentId;
@@ -35,7 +38,8 @@ onActivated(() => {
                         <span> 学生详细信息 </span>
                     </template>
                 </el-page-header>
-                <el-button type="primary" plain @click="GoToUpdateVue(studentId)">修改信息</el-button>
+                <el-button type="primary" plain @click="GoToUpdateVue(studentId)"
+                    v-if="userInfoStore.info.role === 3 || (userInfoStore.info.role === 2 && userInfoStore.info.id === studentInfoData.managerId)">修改信息</el-button>
             </div>
         </template>
         <el-descriptions :column="3" size="large" border>

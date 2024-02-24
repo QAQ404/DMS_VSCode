@@ -5,6 +5,9 @@ import { managerGetListService, managerAddService, managerUpdateService, manager
 import defaultPicture from '@/assets/default.jpg'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
 const pageInfo = ref({  //分页条的信息
     pageNum: 1,
     pageSize: 5,
@@ -175,7 +178,7 @@ onActivated(()=>{
             <div class="card-header">
                 <span>宿管信息</span>
                 <div>
-                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="Plus">添加宿管</el-button>
+                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="Plus" v-if="userInfoStore.info.role === 3">添加宿管</el-button>
                 </div>
             </div>
         </template>
@@ -206,7 +209,7 @@ onActivated(()=>{
             <el-table-column label="邮箱" prop="email" width="200" show-overflow-tooltip></el-table-column>
             <el-table-column label="管理楼栋数" prop="buildingNumber" sortable="custom" width="130"
                 show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" v-if="userInfoStore.info.role===3">
                 <template #default="{ row }">
                     <el-button-group>
                         <el-tooltip content="修改密码" effect="light" :enterable="false" placement="bottom-end">

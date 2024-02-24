@@ -2,24 +2,26 @@
 import { Edit, Delete, Plus, Refresh, View } from '@element-plus/icons-vue'
 import { ref, provide, onActivated } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getStudentListService, studentDeleteService } from '@/api/student.js'
+import { getStudentListService, studentDeleteService ,studentUpdateStuClazzService} from '@/api/student.js'
 import { clazzGetClazzListCascaderService } from '@/api/clazz.js'
 import { dormitoryGetDormitoryListCascaderService } from '@/api/dormitory.js'
 import { useRouter } from 'vue-router';
 const router = useRouter();
+
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
 const clazzList = ref([])
 const getClazzList = async () => {
   let result = await clazzGetClazzListCascaderService();
   clazzList.value = result.data;
 }
-getClazzList()
 
 const dormitoryList = ref([])
 const getDormitoryList = async () => {
   let result = await dormitoryGetDormitoryListCascaderService();
   dormitoryList.value = result.data;
 }
-getDormitoryList()
 
 const pageInfo = ref({  //分页条的信息
   pageNum: 1,
@@ -124,27 +126,88 @@ const clazzNameForm = (row, column, cellValue, index) => { //表格的方法，�
 const dormitoryNameForm = (row, column, cellValue, index) => { //格式化寝室名称
   return row.unitNumber + '单元' + row.floorNumber + '楼' + cellValue
 }
+const dormitoryNameForm2 = (row, column, cellValue, index) => { //格式化寝室名称
+    return row.buildingName + row.unitNumber + '单元' + row.floorNumber + '楼' + cellValue
+}
+const clazzNameForm2 = (row, column, cellValue, index) => {
+    return row.insName + row.majorName + row.clazzYear + "级" + row.clazzName + "班"
+}
 /* -------------------------------多选----------------------------------------------------------------------- */
 const SelectAddStudentList = ref([])
 const SelectAddStudentRef = ref()
 const handleSelectionChange = (val) => {
   SelectAddStudentList.value = val
 }
-const selectMany = () => {
-  console.log(SelectAddStudentList.value);
-}
 const getRowKeys = (row) => {
   return row.id;
+}
+const clearTheSelection = ()=>{
+  SelectAddStudentRef.value.clearSelection();
+}
+/* ----------------------------------批量迁入----------------------------------------------------- */
+import UpdateStuDorDialogVue from '@/components/UpdateStuDorDialog.vue'
+const ifShowUpdateStuDorDialogVue = ref(false);
+const UpdateStuDorDialogData = ref()
+const selectMany = () => {
+    UpdateStuDorDialogData.value = SelectAddStudentList.value;
+    ifShowUpdateStuDorDialogVue.value = true;
+}
+provide('changeIfShowUpdateStuDorDialogVue', (newISUIDV, ifF5) => {
+    ifShowUpdateStuDorDialogVue.value = newISUIDV;
+    if (ifF5) {getStudentList();SelectAddStudentRef.value.clearSelection();}
+})
+provide('UpdateStuDorDialogData', UpdateStuDorDialogData)
+provide('ifShowUpdateStuDorDialogVue', ifShowUpdateStuDorDialogVue)
+/* ---------------------------------修改班级----------------------------------------------------- */
+const ifShowUpdateStuClazzDialogVue = ref(false);
+const clazzId = ref('')
+const changeClazzId = ()=>{
+  clazzId.value = clazzId.value[3]
+}
+const changeStudentClazz = ()=>{
+  ifShowUpdateStuClazzDialogVue.value = true;
+}
+const ConfirmUpdateStuClazz = ()=>{
+  if(SelectAddStudentList.value.length == 0){
+        ElMessage.error('未选中学生')
+    }
+    else if(clazzId.value == ''){
+        ElMessage.error('请选择迁入班级')
+    }
+    else{
+        ElMessageBox.confirm(
+            '是否确认迁入班级',
+            '温馨提示',
+            {
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }
+        )
+            .then(async () => {
+                let result = await studentUpdateStuClazzService(SelectAddStudentList.value,clazzId.value);
+                clazzId.value = ref('').value;
+                closeStuClazzDialog(true)
+                ElMessage({
+                    type: 'success ',
+                    message: '迁入成功',
+                })
+            })
+    }
+}
+const closeStuClazzDialog = (ifF5)=>{
+  if (ifF5) { getStudentList();SelectAddStudentRef.value.clearSelection(); }
+  ifShowUpdateStuClazzDialogVue.value = false;
 }
 /* -----------------------------搜索------------------------------------------------------------------------- */
 const handleClose = (tag) => { //删除标签
   tag.ifShow = false; tag.popoverVisible = false;
-  tag.value = '';  tag.data = [];
+  tag.value = ''; tag.data = [];
   getStudentList();
 }
 const addSearchTag = (command) => { //添加标签
   tagData.value[command].ifShow = true;
-  tagData.value[command].value = ''; 
+  tagData.value[command].value = '';
   tagData.value[command].data = [];
   getStudentList();
 }
@@ -178,6 +241,8 @@ onActivated(() => {
   tagData.value[4].data = [];
   tagData.value[5].data = [];
   getStudentList()
+  getDormitoryList()
+  getClazzList()
   SelectAddStudentRef.value.clearSelection();
 })
 </script>
@@ -187,72 +252,81 @@ onActivated(() => {
     <template #header> <!-- 卡片顶部区域 -->
       <div class="card-header">
         <span>学生信息</span>
-        <div>
-          <el-button type="primary" plain @click="PushToAddStudentVue" :icon="Plus">添加学生</el-button>
-          <el-button type="primary" plain @click="selectMany" :icon="Plus">多选</el-button>
-        </div>
+        <el-space>
+          <el-dropdown trigger="click" placement="bottom-start" v-if="userInfoStore.info.role===3">
+            <el-button type="primary" plain>多选操作</el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="selectMany">迁入寝室</el-dropdown-item>
+                <el-dropdown-item @click="changeStudentClazz">改变班级</el-dropdown-item>
+                <el-dropdown-item @click="clearTheSelection">清空多选框</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <el-button type="primary" plain @click="PushToAddStudentVue" :icon="Plus" v-if="userInfoStore.info.role===3">添加学生</el-button>
+        </el-space>
       </div>
     </template>
     <!-- 搜索栏 -->
     <el-descriptions :column="1" :size="large" border direction="vertical">
       <el-descriptions-item label="自定义搜索">
         <el-space wrap>
-          <el-button :icon=" Refresh " type="warning" plain @click=" clearSearchData " size="large"></el-button>
-          <el-dropdown trigger="click" placement="right-start" @command=" addSearchTag ">
-            <el-button type="primary" plain :icon=" Plus " size="large"></el-button>
+          <el-button :icon="Refresh" type="warning" plain @click="clearSearchData" size="large"></el-button>
+          <el-dropdown trigger="click" placement="right-start" @command="addSearchTag">
+            <el-button type="primary" plain :icon="Plus" size="large"></el-button>
             <template #dropdown>
               <el-dropdown-menu style="user-select: none;">
-                <el-dropdown-item command="0" :disabled=" tagData[0].ifShow ">姓名</el-dropdown-item>
-                <el-dropdown-item command="1" :disabled=" tagData[1].ifShow ">学号</el-dropdown-item>
-                <el-dropdown-item command="2" :disabled=" tagData[2].ifShow ">性别</el-dropdown-item>
-                <el-dropdown-item command="3" :disabled=" tagData[3].ifShow ">年级</el-dropdown-item>
-                <el-dropdown-item command="4" :disabled=" tagData[4].ifShow ">寝室</el-dropdown-item>
-                <el-dropdown-item command="5" :disabled=" tagData[5].ifShow ">班级</el-dropdown-item>
+                <el-dropdown-item command="0" :disabled="tagData[0].ifShow">姓名</el-dropdown-item>
+                <el-dropdown-item command="1" :disabled="tagData[1].ifShow">学号</el-dropdown-item>
+                <el-dropdown-item command="2" :disabled="tagData[2].ifShow">性别</el-dropdown-item>
+                <el-dropdown-item command="3" :disabled="tagData[3].ifShow">年级</el-dropdown-item>
+                <el-dropdown-item command="4" :disabled="tagData[4].ifShow">寝室</el-dropdown-item>
+                <el-dropdown-item command="5" :disabled="tagData[5].ifShow">班级</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-tag v-if=" tagData[5].ifShow " @click="changeTag(tagData[5])" closable :disable-transitions=" false "
+          <el-tag v-if="tagData[5].ifShow" @click="changeTag(tagData[5])" closable :disable-transitions="false"
             @close="handleClose(tagData[5])" size="large" style="height: 40px;">
-            <el-cascader :options=" clazzList " style="width: 400px;" v-model=" tagData[5].data " filterable
-              :show-all-levels=" false " @change="clazzCascaderChange(tagData[5])" :props=" prop2 "
-              collapse-tags clearable>
+            <el-cascader :options="clazzList" style="width: 400px;" v-model="tagData[5].data" filterable
+              :show-all-levels="false" @change="clazzCascaderChange(tagData[5])" :props="prop2" collapse-tags
+              clearable>
               <template #default="{ node, data }">
                 <span>{{ data.label }}</span>
-                <span v-if=" !node.isLeaf "> ({{ data.children.length }}) </span>
+                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
               </template>
             </el-cascader>
           </el-tag>
-          <el-tag v-if=" tagData[4].ifShow " @click="changeTag(tagData[4])" closable :disable-transitions=" false "
+          <el-tag v-if="tagData[4].ifShow" @click="changeTag(tagData[4])" closable :disable-transitions="false"
             @close="handleClose(tagData[4])" size="large" style="height: 40px;">
-            <el-cascader :options=" dormitoryList " style="width: 400px;" v-model=" tagData[4].data " filterable
-                :show-all-levels=" false " @change="DormitoryCascaderChange(tagData[4])" v-if=" tagData[4].inputType === 4 "
-                :props=" prop2 " collapse-tags clearable>
-                <template #default="{ node, data }">
-                  <span>{{ data.label }}</span>
-                  <span v-if=" !node.isLeaf "> ({{ data.children.length }}) </span>
-                </template>
-              </el-cascader>
+            <el-cascader :options="dormitoryList" style="width: 400px;" v-model="tagData[4].data" filterable
+              :show-all-levels="false" @change="DormitoryCascaderChange(tagData[4])" v-if="tagData[4].inputType === 4"
+              :props="prop2" collapse-tags clearable>
+              <template #default="{ node, data }">
+                <span>{{ data.label }}</span>
+                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+              </template>
+            </el-cascader>
           </el-tag>
-          <div v-for=' tag  in  tagData ' :key=" tag ">
-            <el-popover :visible=" tag.popoverVisible " placement="bottom" :width=" 200 " style="user-select: none;"
-              v-if=" tag.inputType !== 5 && tag.inputType !== 4">
-              <el-input v-model=" tag.value " size="small" v-if=" tag.inputType === 1 " style="user-select: none;" />
-              <el-select v-model=" tag.value " style="width: 170px;user-select: none;" v-else-if=" tag.inputType === 2 "
+          <div v-for=' tag  in  tagData ' :key="tag">
+            <el-popover :visible="tag.popoverVisible" placement="bottom" :width="200" style="user-select: none;"
+              v-if="tag.inputType !== 5 && tag.inputType !== 4">
+              <el-input v-model="tag.value" size="small" v-if="tag.inputType === 1" style="user-select: none;" />
+              <el-select v-model="tag.value" style="width: 170px;user-select: none;" v-else-if="tag.inputType === 2"
                 size="small">
                 <el-option label="男" value="男"></el-option>
                 <el-option label="女" value="女"></el-option>
               </el-select>
-              <el-date-picker v-model=" tag.value " type="year" placeholder="选择年份" value-format="YYYY" style="width:130px"
-                size="small" v-else-if=" tag.inputType === 3 " />
+              <el-date-picker v-model="tag.value" type="year" placeholder="选择年份" value-format="YYYY" style="width:180px"
+                size="small" v-else-if="tag.inputType === 3" />
               <div style="text-align: right; padding-top: 10px;user-select: none;">
                 <el-button size="small" type="info" @click="doBack(tag)">取消</el-button>
                 <el-button size="small" type="primary" @click="doSearch(tag)">确认</el-button>
               </div>
               <template #reference>
-                <el-tag closable :disable-transitions=" false " @close="handleClose(tag)" @click="changeTag(tag)"
-                  v-show=" tag.ifShow " size="large" style="height: 40px;">
+                <el-tag closable :disable-transitions="false" @close="handleClose(tag)" @click="changeTag(tag)"
+                  v-show="tag.ifShow" size="large" style="height: 40px;">
                   <div style="display: flex;">
-                    {{ tag.label}} : {{tag.value }}</div>
+                    {{ tag.label }} : {{ tag.value }}</div>
                 </el-tag>
               </template>
             </el-popover>
@@ -261,28 +335,28 @@ onActivated(() => {
       </el-descriptions-item>
     </el-descriptions>
     <!-- 表格主体 -->
-    <el-table ref="SelectAddStudentRef" :data=" studentList " style="width: 100%;" border @sort-change=" sortChange "
-      tooltip-effect="light" @selection-change=" handleSelectionChange " :row-key=" getRowKeys ">
-      <el-table-column type="selection" width="55" fixed="left" :reserve-selection=' true '></el-table-column>
+    <el-table ref="SelectAddStudentRef" :data="studentList" style="width: 100%;" border @sort-change="sortChange"
+      tooltip-effect="light" @selection-change="handleSelectionChange" :row-key="getRowKeys">
+      <el-table-column type="selection" width="55" fixed="left" :reserve-selection='true' v-if="userInfoStore.info.role===3"></el-table-column>
       <el-table-column label="姓名" prop="name" show-overflow-tooltip width="120"></el-table-column>
       <el-table-column label="学号" prop="studyId" sortable="custom" show-overflow-tooltip width="150"></el-table-column>
       <el-table-column label="性别" prop="gender" sortable="custom" show-overflow-tooltip width="80"></el-table-column>
       <el-table-column label="宿舍" prop="buildingName" sortable="custom" show-overflow-tooltip
         width="120"></el-table-column>
       <el-table-column label="寝室" prop="dormitoryName" sortable="custom" show-overflow-tooltip
-        :formatter=" dormitoryNameForm " width="180"></el-table-column>
+        :formatter="dormitoryNameForm" width="180"></el-table-column>
       <el-table-column label="年级" prop="entranceYear" sortable="custom" show-overflow-tooltip
         width="100"></el-table-column>
       <el-table-column label="学院" prop="insName" sortable="custom" show-overflow-tooltip width="150"></el-table-column>
       <el-table-column label="专业" prop="majorName" sortable="custom" show-overflow-tooltip width="150"></el-table-column>
-      <el-table-column label="班级" prop="clazzName" sortable="custom" show-overflow-tooltip :formatter=" clazzNameForm "
+      <el-table-column label="班级" prop="clazzName" sortable="custom" show-overflow-tooltip :formatter="clazzNameForm"
         width="100"></el-table-column>
       <el-table-column label="操作" fixed="right" width="170">
         <template #default="{ row }">
           <el-button-group>
-            <el-button color="#626aef" :dark=" isDark " plain :icon=" View " @click="SeeBuildingInfo(row.id)" />
-            <el-button color="#E6A23C" :dark=" isDark " plain :icon=" Edit " @click="GoToUpdateVue(row.id)" />
-            <el-button color="#F56C6C" :dark=" isDark " plain :icon=" Delete " @click="DeleteStudent(row.id)" />
+            <el-button color="#626aef" :dark="isDark" plain :icon="View" @click="SeeBuildingInfo(row.id)" />
+            <el-button color="#E6A23C" :dark="isDark" plain :icon="Edit" @click="GoToUpdateVue(row.id)" v-if="userInfoStore.info.role===3||(userInfoStore.info.role===2&&userInfoStore.info.id===row.managerId)"/>
+            <el-button color="#F56C6C" :dark="isDark" plain :icon="Delete" @click="DeleteStudent(row.id)" v-if="userInfoStore.info.role===3"/>
           </el-button-group>
         </template>
       </el-table-column>
@@ -291,11 +365,40 @@ onActivated(() => {
       </template>
     </el-table>
     <!-- 分页条 -->
-    <el-pagination v-model:current-page=" pageInfo.pageNum " v-model:page-size=" pageInfo.pageSize "
-      :page-sizes=" [5, 10, 20] " layout="jumper, total, sizes, prev, pager, next" :total=" pageInfo.total "
-      @size-change=" onSizeChange " @current-change=" onCurrentChange "
+    <el-pagination v-model:current-page="pageInfo.pageNum" v-model:page-size="pageInfo.pageSize"
+      :page-sizes="[5, 10, 20]" layout="jumper, total, sizes, prev, pager, next" :total="pageInfo.total"
+      @size-change="onSizeChange" @current-change="onCurrentChange"
       style="margin-top: 20px; justify-content: flex-end" />
   </el-card>
+  <el-dialog v-model="ifShowUpdateStuClazzDialogVue" @close="closeStuClazzDialog(false)" title="学生转班">
+        <el-table :data="SelectAddStudentList" tooltip-effect="light" empty-text="未选中学生">
+            <el-table-column prop="name" label="姓名" width="100" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="gender" label="性别" width="80" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="studyId" label="学号" width="160" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="clazzName" label="班级" :formatter="clazzNameForm2" width="250"
+            show-overflow-tooltip></el-table-column>
+            <el-table-column prop="dormitoryName" label="寝室" :formatter="dormitoryNameForm2" width="250"
+                show-overflow-tooltip></el-table-column>
+        </el-table>
+        <div style="padding-top: 5px;">
+            <span>迁入班级: </span>
+            <el-cascader :options="clazzList" style="width: 370px;" v-model="clazzId" filterable
+                    :show-all-levels="false" @change="changeClazzId">
+                    <template #default="{ node, data }">
+                        <span>{{ data.label }}</span>
+                        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                    </template>
+                </el-cascader>
+        </div>
+        <template #footer>
+            <span>
+                <el-button type="primary" @click="ConfirmUpdateStuClazz">
+                    确认
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
+  <UpdateStuDorDialogVue />
 </template>
 
 <style scoped>

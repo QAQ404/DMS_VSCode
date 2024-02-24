@@ -9,6 +9,10 @@ import { clazzGetClazzListCascaderService } from '@/api/clazz.js'
 import { dormitoryGetDormitoryListCascaderService } from '@/api/dormitory.js'
 import defaultPicture from '@/assets/default.jpg'
 const tokenStore = useTokenStore();
+
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
 //照片上传的回调
 const uploadSuccess = (result) => {
     if (result.data === 'big') {
@@ -465,7 +469,7 @@ onBeforeRouteLeave((to, from, next) => {
             <el-descriptions-item>
                 <template #label> 寝室 </template>
                 <el-cascader :options="dormitoryList" style="width: 370px;" v-model="studentInfoData.dormitoryId" filterable
-                    :show-all-levels="false" @change="changeDormitoryId">
+                    :show-all-levels="false" @change="changeDormitoryId" :disabled="userInfoStore.info.role!==3">
                     <template #default="{ node, data }">
                         <span>{{ data.label }}</span>
                         <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
@@ -476,7 +480,7 @@ onBeforeRouteLeave((to, from, next) => {
             <el-descriptions-item>
                 <template #label> 班级 </template>
                 <el-cascader :options="clazzList" style="width: 370px;" v-model="studentInfoData.clazzId" filterable
-                    :show-all-levels="false" @change="changeClazzId">
+                    :show-all-levels="false" @change="changeClazzId" :disabled="(userInfoStore.info.role!==3)">
                     <template #default="{ node, data }">
                         <span>{{ data.label }}</span>
                         <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>

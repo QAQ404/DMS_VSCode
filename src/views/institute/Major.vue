@@ -5,6 +5,9 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { majorGetMajorListService ,majorAddService,majorGetMajorByIdService,updateMajorService,majorDeleteService} from '@/api/major.js'
 import { instituteGetInstituteNameListService } from '@/api/institute.js'
 
+import { useUserInfoStore } from '@/stores/userInfo.js'
+const userInfoStore = useUserInfoStore();
+
 const pageInfo = ref({  //分页条的信息
     pageNum: 1,
     pageSize: 5,
@@ -164,7 +167,7 @@ onActivated(()=>{
             <div class="card-header">
                 <span>专业信息</span>
                 <div>
-                    <el-button type="primary" plain @click="SeeAddQuicklyDialog" :icon="AddLocation">添加专业</el-button>
+                    <el-button type="primary" v-if="userInfoStore.info.role===3" plain @click="SeeAddQuicklyDialog" :icon="AddLocation">添加专业</el-button>
                 </div>
             </div>
         </template>
@@ -191,7 +194,7 @@ onActivated(()=>{
             <el-table-column label="所属学院" prop="insName" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column label="班级数" prop="clazzNumber" sortable="custom" show-overflow-tooltip></el-table-column>
             <el-table-column label="学生数" prop="stuNumber" sortable="custom" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" v-if="userInfoStore.info.role===3">
                 <template #default="{ row }">
                     <el-button-group>
                         <el-button color="#E6A23C" :dark="isDark" plain :icon="Edit" @click="SeeUpdateDialog(row.id)" />

@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, routeLocationKey } from "vue-router";
 
 import LoginVue from '@/views/Login.vue'
 import LayoutVue from '@/views/Layout.vue'
@@ -40,6 +40,25 @@ const routers = [
 const router = createRouter({
     history: createWebHistory(),
     routes: routers
+})
+
+import { useUserInfoStore } from '@/stores/userInfo.js'
+import { ref } from 'vue'
+
+router.beforeEach((to,from) => {
+    const userInfoStore = useUserInfoStore();
+    const routerList = ref(['studentAdd','studentUpdate'])
+    const routerList2 = ref(['studentAdd'])
+    if(userInfoStore.info.role == 1){
+        routerList.value.forEach((item,i)=>{
+            if(to.name == item) { router.push({name:'main'}) }
+        })
+    }
+    else if(userInfoStore.info.role == 2){
+        routerList2.value.forEach((item,i)=>{
+            if(to.name == item) { router.push({name:'main'}) }
+        })
+    }
 })
 
 export default router

@@ -90,9 +90,10 @@ getUserInfoMethod();
         <el-container style="user-select: none;">
             <!-- 页面左边菜单栏 -->
             <el-aside class="e-left-menu">
-                <el-menu active-text-color="#ffd04b"  background-color="#545c64" text-color="#fff"
-                    router>
-                    <el-sub-menu index="1">
+                <!-- ----------------系统管理员的菜单-------------------------------- -->
+                <el-menu active-text-color="#ffd04b" background-color="#545c64" text-color="#fff" router
+                    v-if="userInfoStore.info.role === 3">
+                    <el-sub-menu index="1"><!-- ------------------------- -->
                         <template #title>
                             <span>宿舍管理</span>
                         </template>
@@ -108,13 +109,19 @@ getUserInfoMethod();
                             </el-icon>
                             <span>楼栋管理</span>
                         </el-menu-item>
-                    </el-sub-menu>
+                        <el-menu-item index="/manager">
+                            <el-icon>
+                                <User />
+                            </el-icon>
+                            <span>宿管管理</span>
+                        </el-menu-item>
+                    </el-sub-menu> <!-- ------------------------- -->
                     <el-menu-item index="/student">
                         <el-icon>
                             <UserFilled />
                         </el-icon>
                         <span>学生管理</span>
-                    </el-menu-item>
+                    </el-menu-item><!-- ------------------------- -->
                     <el-sub-menu indx="2">
                         <template #title>
                             <span>学院信息</span>
@@ -137,14 +144,169 @@ getUserInfoMethod();
                             </el-icon>
                             <span>班级管理</span>
                         </el-menu-item>
-                    </el-sub-menu>
-                    <el-menu-item index="/manager">
-                        <el-icon>
-                            <User />
-                        </el-icon>
-                        <span>宿管管理</span>
-                    </el-menu-item>
+                    </el-sub-menu><!-- ------------------------- -->
                     <el-sub-menu index="3"> <!-- 父菜单-个人中心 -->
+                        <template #title>
+                            <span>个人中心</span>
+                        </template>
+                        <el-menu-item index="/main">
+                            <el-icon>
+                                <House />
+                            </el-icon>
+                            <span>我的主页</span>
+                        </el-menu-item>
+                        <el-menu-item index="/userInfo">
+                            <el-icon>
+                                <Postcard />
+                            </el-icon>
+                            <span>基本资料</span>
+                        </el-menu-item>
+                    </el-sub-menu>
+                </el-menu>
+                <!-- ---------管理员菜单---------------- -->
+                <el-menu active-text-color="#ffd04b" background-color="#545c64" text-color="#fff" router
+                    v-if="userInfoStore.info.role === 2">
+                    <el-sub-menu index="1"><!-- ------------------------- -->
+                        <template #title>
+                            <span>宿舍管理</span>
+                        </template>
+                        <el-menu-item index="/dormitory">
+                            <el-icon>
+                                <HomeFilled />
+                            </el-icon>
+                            <span>寝室管理</span>
+                        </el-menu-item>
+                        <el-menu-item index="/student">
+                            <el-icon>
+                                <UserFilled />
+                            </el-icon>
+                            <span>学生管理</span>
+                        </el-menu-item>
+                    </el-sub-menu> <!-- ------------------------- -->
+                    <el-sub-menu index="2">
+                        <template #title>
+                            <span>信息查询</span>
+                        </template>
+                        <el-sub-menu index="3">
+                            <template #title>
+                                <span>宿舍信息</span>
+                            </template>
+                            <el-menu-item index="/building">
+                                <el-icon>
+                                    <OfficeBuilding />
+                                </el-icon>
+                                <span>楼栋</span>
+                            </el-menu-item>
+                            <el-menu-item index="/manager">
+                                <el-icon>
+                                    <User />
+                                </el-icon>
+                                <span>宿管</span>
+                            </el-menu-item>
+                        </el-sub-menu>
+                        <el-sub-menu indx="4">
+                            <template #title>
+                                <span>学院信息</span>
+                            </template>
+                            <el-menu-item index="/institute">
+                                <el-icon>
+                                    <School />
+                                </el-icon>
+                                <span>学院</span>
+                            </el-menu-item>
+                            <el-menu-item index="/major">
+                                <el-icon>
+                                    <Reading />
+                                </el-icon>
+                                <span>专业</span>
+                            </el-menu-item>
+                            <el-menu-item index="/clazz">
+                                <el-icon>
+                                    <Connection />
+                                </el-icon>
+                                <span>班级</span>
+                            </el-menu-item>
+                        </el-sub-menu>
+                    </el-sub-menu>
+                    <el-sub-menu index="5"> <!-- 父菜单-个人中心 -->
+                        <template #title>
+                            <span>个人中心</span>
+                        </template>
+                        <el-menu-item index="/main">
+                            <el-icon>
+                                <House />
+                            </el-icon>
+                            <span>我的主页</span>
+                        </el-menu-item>
+                        <el-menu-item index="/userInfo">
+                            <el-icon>
+                                <Postcard />
+                            </el-icon>
+                            <span>基本资料</span>
+                        </el-menu-item>
+                    </el-sub-menu>
+                </el-menu>
+                <!-- ----------------学生的菜单-------------------------------- -->
+                <el-menu active-text-color="#ffd04b" background-color="#545c64" text-color="#fff" router
+                    v-if="userInfoStore.info.role === 1">
+                    <el-sub-menu index="1">
+                        <template #title>
+                            <span>信息查询</span>
+                        </template>
+                        <el-sub-menu index="2">
+                            <template #title>
+                                <span>宿舍信息</span>
+                            </template>
+                            <el-menu-item index="/dormitory">
+                                <el-icon>
+                                    <HomeFilled />
+                                </el-icon>
+                                <span>寝室</span>
+                            </el-menu-item>
+                            <el-menu-item index="/building">
+                                <el-icon>
+                                    <OfficeBuilding />
+                                </el-icon>
+                                <span>楼栋</span>
+                            </el-menu-item>
+                            <el-menu-item index="/manager">
+                                <el-icon>
+                                    <User />
+                                </el-icon>
+                                <span>宿管</span>
+                            </el-menu-item>
+                        </el-sub-menu>
+                        <el-menu-item index="/student">
+                            <el-icon>
+                                <UserFilled />
+                            </el-icon>
+                            <span>学生信息</span>
+                        </el-menu-item>
+                        <el-sub-menu indx="3">
+                            <template #title>
+                                <span>学院信息</span>
+                            </template>
+                            <el-menu-item index="/institute">
+                                <el-icon>
+                                    <School />
+                                </el-icon>
+                                <span>学院</span>
+                            </el-menu-item>
+                            <el-menu-item index="/major">
+                                <el-icon>
+                                    <Reading />
+                                </el-icon>
+                                <span>专业</span>
+                            </el-menu-item>
+                            <el-menu-item index="/clazz">
+                                <el-icon>
+                                    <Connection />
+                                </el-icon>
+                                <span>班级</span>
+                            </el-menu-item>
+                        </el-sub-menu>
+                    </el-sub-menu>
+                    <el-sub-menu index="4"> <!-- 父菜单-个人中心 -->
                         <template #title>
                             <span>个人中心</span>
                         </template>
@@ -167,9 +329,9 @@ getUserInfoMethod();
             <el-main style="background-color: #F2F6FC;padding: 7px;">
                 <router-view v-slot="{ Component }">
                     <keep-alive>
-                        <component :is="Component" :key="$route.name"  v-if="$route.meta.keepAlive"/>
+                        <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" />
                     </keep-alive>
-                    <component :is="Component" :key="$route.name"  v-if="!$route.meta.keepAlive"/>
+                    <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive" />
                 </router-view>
             </el-main>
         </el-container>
@@ -216,4 +378,5 @@ getUserInfoMethod();
 /*菜单展开箭头样式*/
 .el-sub-menu.is-opened> :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
     transform: rotate(0deg) !important;
-}</style>
+}
+</style>
