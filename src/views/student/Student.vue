@@ -95,7 +95,7 @@ const GoToUpdateVue = (studentId) => {
 /* ----------------------------------------删除学生-------------------------------------------------------------- */
 const DeleteStudent = (id) => {
   ElMessageBox.confirm(
-    '是否确认删除',
+    '是否确认删除，这会删除该学生的相关信息',
     '温馨提示',
     {
       confirmButtonText: '确认',

@@ -543,7 +543,7 @@ onActivated(() => {
                 :formatter=" lastBedForm "></el-table-column>
             <el-table-column label="宿管" prop="manName" sortable="custom" width="120"
                 show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作" fix="right" width="170">
+            <el-table-column label="操作" fixed="right" width="170">
                 <template #default="{ row }">
                     <el-button-group>
                         <el-button color="#626aef" :dark=" isDark " plain :icon=" View " @click="SeeDormitoryInfo(row)" />

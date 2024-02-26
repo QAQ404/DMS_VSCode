@@ -7,6 +7,7 @@ import UserInfoVue from '@/views/user/UserInfo.vue'
 import BuildingVue from '@/views/building/Building.vue'
 import ManagerVue from '@/views/manager/Manager.vue'
 import DormitoryVue from '@/views/dormitory/Dormitory.vue'
+import ChangeDormitoryApplicationVue from '@/views/dormitory/ChangeDormitoryApplication.vue'
 import StudentVue from '@/views/student/Student.vue'
 import StudentInfoVue from '@/views/student/StudentInfo.vue'
 import StudentAddVue from '@/views/student/StudentAdd.vue'
@@ -26,6 +27,7 @@ const routers = [
             { path: '/building', component: BuildingVue ,name:'building', meta:{keepAlive:true}},  /* 宿舍楼管理 */
             { path: '/manager', component: ManagerVue ,name:'manager', meta:{keepAlive:true}},    /* 宿管管理 */
             { path: '/dormitory', component: DormitoryVue,name:'dormitory', meta:{keepAlive:true} },    /* 寝室管理 */
+            { path: '/changeDormitoryApplication', component: ChangeDormitoryApplicationVue,name:'changeDormitoryApplication', meta:{keepAlive:true} },    /* 寝室管理 */
             { path: '/student', component: StudentVue, name:'student', meta:{keepAlive:true}},    /* 学生管理 */
             { path: '/student/studentAdd', component: StudentAddVue, name:'studentAdd', meta:{keepAlive:true}},    /* 学生添加 */
             { path: '/student/studentInfo/:studentId', component: StudentInfoVue,name:'studentInfo', meta:{keepAlive:true}}, /* 学生详细信息管理 */
@@ -48,7 +50,7 @@ import { ref } from 'vue'
 router.beforeEach((to,from) => {
     const userInfoStore = useUserInfoStore();
     const routerList = ref(['studentAdd','studentUpdate'])
-    const routerList2 = ref(['studentAdd'])
+    const routerList2 = ref(['studentAdd','changeDormitoryApplication'])
     if(userInfoStore.info.role == 1){
         routerList.value.forEach((item,i)=>{
             if(to.name == item) { router.push({name:'main'}) }

@@ -1,5 +1,5 @@
 <script setup>
-import { UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House, Connection, Reading } from '@element-plus/icons-vue'
+import {Switch, UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House, Connection, Reading } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import avatar from '@/assets/default.jpg'
 import { ref } from 'vue'
@@ -122,6 +122,15 @@ getUserInfoMethod();
                         </el-icon>
                         <span>学生管理</span>
                     </el-menu-item><!-- ------------------------- -->
+                    <el-sub-menu index="4"><!-- ------------------------- -->
+                        <template #title>
+                            <span>事务处理</span>
+                        </template>
+                        <el-menu-item index="/changeDormitoryApplication">
+                            <el-icon><Switch /></el-icon>
+                            <span>转寝申请</span>
+                        </el-menu-item>
+                    </el-sub-menu>
                     <el-sub-menu indx="2">
                         <template #title>
                             <span>学院信息</span>
@@ -249,6 +258,15 @@ getUserInfoMethod();
                 <!-- ----------------学生的菜单-------------------------------- -->
                 <el-menu active-text-color="#ffd04b" background-color="#545c64" text-color="#fff" router
                     v-if="userInfoStore.info.role === 1">
+                    <el-sub-menu index="5"><!-- ------------------------- -->
+                        <template #title>
+                            <span>我的寝室</span>
+                        </template>
+                        <el-menu-item index="/changeDormitoryApplication">
+                            <el-icon><Switch /></el-icon>
+                            <span>申请转寝</span>
+                        </el-menu-item>
+                    </el-sub-menu>
                     <el-sub-menu index="1">
                         <template #title>
                             <span>信息查询</span>

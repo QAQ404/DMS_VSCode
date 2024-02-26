@@ -13,17 +13,24 @@ alert(a.value.toLocaleDateString().split('/').join('-'))
 
 <template>
     <el-card style="min-height: 99%;">
-        <button @click="b">+</button>
-        <el-calendar v-model="a">
-            <template #date-cell="{ data, date }">
-                <p :class="data.isSelected ? 'is-selected' : ''">
-                    {{ data.day.split('-').slice(1).join('-') }}
-                    {{ data.isSelected ? '✔️' : '' }}
-                </p>{{ date }}
-                <div v-if="data.day === '2024-01-01'">1</div>
+        <el-calendar v-model="a" class="TheCalendar" >
+            <template #date-cell="{ data }">
+                <el-space>
+                    {{ data.day.split('-').slice(2).join('-') }}
+                    <div v-if='true'>1</div>
+                </el-space>
             </template>
         </el-calendar>
+        <button @click="b">+</button>
+        
     </el-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+.TheCalendar /deep/ .el-calendar-table .el-calendar-day{
+    width: 100%;
+    height: 40px;
+    text-align: left;
+  }
+</style>
