@@ -30,3 +30,7 @@ export const dormitoryAddManyService = (data)=>{
 export const dormitoryGetDormitoryListCascaderService = ()=>{
     return request.get('/dormitory/getDormitoryListCascader')
 }
+
+export const dormitoryGetDormitoryBedListCascaderService = ()=>{
+    return request.get('/dormitory/getDormitoryBedListCascader')
+}

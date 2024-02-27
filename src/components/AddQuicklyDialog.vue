@@ -149,6 +149,17 @@ const rules = {
             </el-form-item>
             </el-form>
         </div>
+        <div v-else-if="AddQuicklyDialogType === 'changeDorApp'"> <!-- 换寝申请快速添加 -->
+            换寝目标：
+            <el-cascader :options="AddQuicklyDialogData" style="width: 500px;" v-model="AddQuicklyDialogData2" filterable
+                    :show-all-levels="true">
+                    <template #default="{ node, data }">
+                        <span>{{ data.label }}</span>
+                        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                        <span v-if="data.bed >= 0">(剩余床位:{{ data.bed }})</span>
+                    </template>
+            </el-cascader>
+        </div>
         <template #footer>
             <span>
                 <el-button @click="closeDialog()">取消</el-button>
