@@ -41,7 +41,11 @@ const rules = {
 </script>
 
 <template>
-    <el-dialog v-model="ifShowAddQuicklyDialogVue" @close="closeDialog()" draggable title="快速添加">
+    <el-dialog v-model="ifShowAddQuicklyDialogVue" @close="closeDialog()" draggable>
+        <template #header>
+            <div v-if="AddQuicklyDialogType === 'changeDorApp'"> 提交申请 </div>
+            <div v-else>快速添加</div>
+        </template>
         <div v-if="AddQuicklyDialogType === 'building'"> <!-- 宿舍快速添加 -->
             <el-form :data="AddQuicklyDialogData" autocomplete="off">
                 <el-form-item label="楼栋名称">
@@ -111,53 +115,57 @@ const rules = {
             </el-form>
         </div>
         <div v-else-if="AddQuicklyDialogType === 'institute'"> <!-- 学院快速添加 -->
-            <el-form :data="AddQuicklyDialogData" autocomplete="off" >
+            <el-form :data="AddQuicklyDialogData" autocomplete="off">
                 <el-form-item label="学院名称">
                     <el-input v-model="AddQuicklyDialogData.name" placeholder="请输入学院名称" />
                 </el-form-item>
             </el-form>
         </div>
         <div v-else-if="AddQuicklyDialogType === 'major'"> <!-- 专业快速添加 -->
-            <el-form :data="AddQuicklyDialogData" autocomplete="off" >
+            <el-form :data="AddQuicklyDialogData" autocomplete="off">
                 <el-form-item label="专业名称">
                     <el-input v-model="AddQuicklyDialogData.name" placeholder="请输入专业名称" />
                 </el-form-item>
-                <el-form-item  label="所属学院">
-                <el-select v-model="AddQuicklyDialogData.insName" filterable style="width: 400px">
-                    <el-option v-for="item in AddQuicklyDialogData2" :key="item.value" :label="item.label" :value="item.label" />
-                </el-select>
-            </el-form-item>
+                <el-form-item label="所属学院">
+                    <el-select v-model="AddQuicklyDialogData.insName" filterable style="width: 400px">
+                        <el-option v-for="item in AddQuicklyDialogData2" :key="item.value" :label="item.label"
+                            :value="item.label" />
+                    </el-select>
+                </el-form-item>
             </el-form>
         </div>
         <div v-else-if="AddQuicklyDialogType === 'clazz'"> <!-- 班级快速添加 -->
-            <el-form :data="AddQuicklyDialogData" autocomplete="off" >
+            <el-form :data="AddQuicklyDialogData" autocomplete="off">
                 <el-form-item label="班级号">
-                    &nbsp;&nbsp;&nbsp;<el-input-number v-model="AddQuicklyDialogData.name"  :min="1"/>
+                    &nbsp;&nbsp;&nbsp;<el-input-number v-model="AddQuicklyDialogData.name" :min="1" />
                 </el-form-item>
-                <el-form-item label="年级">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<el-date-picker v-model="AddQuicklyDialogData.entranceYear" type="year"
-                    placeholder="选择年份" value-format="YYYY"/></el-form-item>
-                <el-form-item  label="所属学院">
-                <el-select v-model="AddQuicklyDialogData.insName" filterable style="width: 400px" @change="Function()">
-                    <el-option v-for="item in AddQuicklyDialogData2" :key="item.value" :label="item.label" :value="item.label" />
-                </el-select>
-            </el-form-item>
-            <el-form-item  label="所属专业">
-                <el-select v-model="AddQuicklyDialogData.majorName" filterable :disabled="ifShowAddQuicklyDialogVue2"  style="width: 400px"
-                placeholder="先选择学院">
-                    <el-option v-for="item in AddQuicklyDialogData3" :key="item.value" :label="item.label" :value="item.label" />
-                </el-select>
-            </el-form-item>
+                <el-form-item label="年级">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<el-date-picker
+                        v-model="AddQuicklyDialogData.entranceYear" type="year" placeholder="选择年份"
+                        value-format="YYYY" /></el-form-item>
+                <el-form-item label="所属学院">
+                    <el-select v-model="AddQuicklyDialogData.insName" filterable style="width: 400px" @change="Function()">
+                        <el-option v-for="item in AddQuicklyDialogData2" :key="item.value" :label="item.label"
+                            :value="item.label" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属专业">
+                    <el-select v-model="AddQuicklyDialogData.majorName" filterable :disabled="ifShowAddQuicklyDialogVue2"
+                        style="width: 400px" placeholder="先选择学院">
+                        <el-option v-for="item in AddQuicklyDialogData3" :key="item.value" :label="item.label"
+                            :value="item.label" />
+                    </el-select>
+                </el-form-item>
             </el-form>
         </div>
         <div v-else-if="AddQuicklyDialogType === 'changeDorApp'"> <!-- 换寝申请快速添加 -->
             换寝目标：
             <el-cascader :options="AddQuicklyDialogData" style="width: 500px;" v-model="AddQuicklyDialogData2" filterable
-                    :show-all-levels="true">
-                    <template #default="{ node, data }">
-                        <span>{{ data.label }}</span>
-                        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-                        <span v-if="data.bed >= 0">(剩余床位:{{ data.bed }})</span>
-                    </template>
+                :show-all-levels="true">
+                <template #default="{ node, data }">
+                    <span>{{ data.label }}</span>
+                    <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                    <span v-if="data.bed >= 0">(剩余床位:{{ data.bed }})</span>
+                </template>
             </el-cascader>
         </div>
         <template #footer>
