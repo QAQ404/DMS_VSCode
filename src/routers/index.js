@@ -8,6 +8,7 @@ import BuildingVue from '@/views/building/Building.vue'
 import ManagerVue from '@/views/manager/Manager.vue'
 import DormitoryVue from '@/views/dormitory/Dormitory.vue'
 import ChangeDormitoryApplicationVue from '@/views/dormitory/ChangeDormitoryApplication.vue'
+import RepairApplicationVue from '@/views/dormitory/RepairApplication.vue'
 import StudentVue from '@/views/student/Student.vue'
 import StudentInfoVue from '@/views/student/StudentInfo.vue'
 import StudentAddVue from '@/views/student/StudentAdd.vue'
@@ -28,6 +29,7 @@ const routers = [
             { path: '/manager', component: ManagerVue ,name:'manager', meta:{keepAlive:true}},    /* 宿管管理 */
             { path: '/dormitory', component: DormitoryVue,name:'dormitory', meta:{keepAlive:true} },    /* 寝室管理 */
             { path: '/changeDormitoryApplication', component: ChangeDormitoryApplicationVue,name:'changeDormitoryApplication', meta:{keepAlive:true} },    /* 寝室管理 */
+            { path: '/repairApplication', component: RepairApplicationVue,name:'repairApplication', meta:{keepAlive:true} },    /* 寝室管理 */
             { path: '/student', component: StudentVue, name:'student', meta:{keepAlive:true}},    /* 学生管理 */
             { path: '/student/studentAdd', component: StudentAddVue, name:'studentAdd', meta:{keepAlive:true}},    /* 学生添加 */
             { path: '/student/studentInfo/:studentId', component: StudentInfoVue,name:'studentInfo', meta:{keepAlive:true}}, /* 学生详细信息管理 */

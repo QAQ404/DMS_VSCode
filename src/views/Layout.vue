@@ -1,5 +1,5 @@
 <script setup>
-import {Switch, UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House, Connection, Reading } from '@element-plus/icons-vue'
+import { Switch, UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House, Connection, Reading } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import avatar from '@/assets/default.jpg'
 import { ref } from 'vue'
@@ -98,16 +98,16 @@ getUserInfoMethod();
                             <span>宿舍管理</span>
                         </template>
                         <el-menu-item index="/dormitory">
-                            <el-icon>
-                                <HomeFilled />
-                            </el-icon>
-                            <span>寝室管理</span>
+                            <el-space>
+                                <img src="@/assets/床位.png" alt="" width="20">
+                                <span>寝室管理</span>
+                            </el-space>
                         </el-menu-item>
                         <el-menu-item index="/building">
                             <el-icon>
                                 <OfficeBuilding />
                             </el-icon>
-                            <span>楼栋管理</span>
+                            <span>楼栋管理</span>                 
                         </el-menu-item>
                         <el-menu-item index="/manager">
                             <el-icon>
@@ -115,20 +115,28 @@ getUserInfoMethod();
                             </el-icon>
                             <span>宿管管理</span>
                         </el-menu-item>
+                        <el-menu-item index="/student">
+                            <el-icon>
+                                <UserFilled />
+                            </el-icon>
+                            <span>学生管理</span>
+                        </el-menu-item>
                     </el-sub-menu> <!-- ------------------------- -->
-                    <el-menu-item index="/student">
-                        <el-icon>
-                            <UserFilled />
-                        </el-icon>
-                        <span>学生管理</span>
-                    </el-menu-item><!-- ------------------------- -->
                     <el-sub-menu index="4"><!-- ------------------------- -->
                         <template #title>
                             <span>事务处理</span>
                         </template>
                         <el-menu-item index="/changeDormitoryApplication">
-                            <el-icon><Switch /></el-icon>
+                            <el-icon>
+                                <Switch />
+                            </el-icon>
                             <span>转寝申请</span>
+                        </el-menu-item>
+                        <el-menu-item index="/repairApplication">
+                            <el-space>
+                                <img src="@/assets/fix.png" alt="" width="20">
+                                <span> 寝室报修</span>
+                            </el-space>
                         </el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu indx="2">
@@ -136,10 +144,10 @@ getUserInfoMethod();
                             <span>学院信息</span>
                         </template>
                         <el-menu-item index="/institute">
-                            <el-icon>
-                                <School />
-                            </el-icon>
-                            <span>学院管理</span>
+                            <el-space>
+                                <img src="@/assets/学院.png" alt="" width="20">
+                                <span>学院</span>
+                            </el-space>
                         </el-menu-item>
                         <el-menu-item index="/major">
                             <el-icon>
@@ -159,10 +167,10 @@ getUserInfoMethod();
                             <span>个人中心</span>
                         </template>
                         <el-menu-item index="/main">
-                            <el-icon>
-                                <House />
-                            </el-icon>
-                            <span>我的主页</span>
+                            <el-space>
+                                <img src="@/assets/主页.png" alt="" width="20">
+                                <span>我的主页</span>
+                            </el-space>
                         </el-menu-item>
                         <el-menu-item index="/userInfo">
                             <el-icon>
@@ -180,10 +188,10 @@ getUserInfoMethod();
                             <span>宿舍管理</span>
                         </template>
                         <el-menu-item index="/dormitory">
-                            <el-icon>
-                                <HomeFilled />
-                            </el-icon>
-                            <span>寝室管理</span>
+                            <el-space>
+                                <img src="@/assets/床位.png" alt="" width="20">
+                                <span>寝室管理</span>
+                            </el-space>
                         </el-menu-item>
                         <el-menu-item index="/student">
                             <el-icon>
@@ -192,6 +200,17 @@ getUserInfoMethod();
                             <span>学生管理</span>
                         </el-menu-item>
                     </el-sub-menu> <!-- ------------------------- -->
+                    <el-sub-menu index="6"><!-- ------------------------- -->
+                        <template #title>
+                            <span>事务处理</span>
+                        </template>
+                        <el-menu-item index="/repairApplication">
+                            <el-space>
+                                <img src="@/assets/fix.png" alt="" width="20">
+                                <span> 寝室报修</span>
+                            </el-space>
+                        </el-menu-item>
+                    </el-sub-menu>
                     <el-sub-menu index="2">
                         <template #title>
                             <span>信息查询</span>
@@ -218,10 +237,10 @@ getUserInfoMethod();
                                 <span>学院信息</span>
                             </template>
                             <el-menu-item index="/institute">
-                                <el-icon>
-                                    <School />
-                                </el-icon>
-                                <span>学院</span>
+                                <el-space>
+                                    <img src="@/assets/学院.png" alt="" width="20">
+                                    <span>学院</span>
+                                </el-space>
                             </el-menu-item>
                             <el-menu-item index="/major">
                                 <el-icon>
@@ -242,10 +261,10 @@ getUserInfoMethod();
                             <span>个人中心</span>
                         </template>
                         <el-menu-item index="/main">
-                            <el-icon>
-                                <House />
-                            </el-icon>
-                            <span>我的主页</span>
+                            <el-space>
+                                <img src="@/assets/主页.png" alt="" width="20">
+                                <span>我的主页</span>
+                            </el-space>
                         </el-menu-item>
                         <el-menu-item index="/userInfo">
                             <el-icon>
@@ -263,8 +282,16 @@ getUserInfoMethod();
                             <span>我的寝室</span>
                         </template>
                         <el-menu-item index="/changeDormitoryApplication">
-                            <el-icon><Switch /></el-icon>
+                            <el-icon>
+                                <Switch />
+                            </el-icon>
                             <span>申请转寝</span>
+                        </el-menu-item>
+                        <el-menu-item index="/repairApplication">
+                            <el-space>
+                                <img src="@/assets/fix.png" alt="" width="20">
+                                <span> 寝室报修</span>
+                            </el-space>
                         </el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="1">
@@ -276,10 +303,10 @@ getUserInfoMethod();
                                 <span>宿舍信息</span>
                             </template>
                             <el-menu-item index="/dormitory">
-                                <el-icon>
-                                    <HomeFilled />
-                                </el-icon>
-                                <span>寝室</span>
+                                <el-space>
+                                    <img src="@/assets/床位.png" alt="" width="20">
+                                    <span>寝室</span>
+                                </el-space>
                             </el-menu-item>
                             <el-menu-item index="/building">
                                 <el-icon>
@@ -305,10 +332,10 @@ getUserInfoMethod();
                                 <span>学院信息</span>
                             </template>
                             <el-menu-item index="/institute">
-                                <el-icon>
-                                    <School />
-                                </el-icon>
-                                <span>学院</span>
+                                <el-space>
+                                    <img src="@/assets/学院.png" alt="" width="20">
+                                    <span>学院</span>
+                                </el-space>
                             </el-menu-item>
                             <el-menu-item index="/major">
                                 <el-icon>
@@ -329,10 +356,10 @@ getUserInfoMethod();
                             <span>个人中心</span>
                         </template>
                         <el-menu-item index="/main">
-                            <el-icon>
-                                <House />
-                            </el-icon>
-                            <span>我的主页</span>
+                            <el-space>
+                                <img src="@/assets/主页.png" alt="" width="20">
+                                <span>我的主页</span>
+                            </el-space>
                         </el-menu-item>
                         <el-menu-item index="/userInfo">
                             <el-icon>
