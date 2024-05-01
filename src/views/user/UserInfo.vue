@@ -236,7 +236,7 @@ const uploadSuccess = (result) => {
     if (result.data === 'big') {
         ElMessage.error('图片大小需小于1MB'); return;
     }
-    UpdateInfoDialogData.value.picture = result.data;
+    UserData.value.picture = result.data;
 }
 import { useTokenStore } from '@/stores/token.js';
 const tokenStore = useTokenStore();
@@ -352,7 +352,9 @@ const sumbitUpdate = async () => {
                 .then(async () => {
                     let result = await UpdateStudentInfoService(UserData.value);
                     userInfoStore.info.name = UserData.value.name;
+                    userInfoStore.info.picture = UserData.value.picture;
                     getUserData()
+
                     ElMessage({
                         type: 'success ',
                         message: '修改成功',
@@ -373,6 +375,7 @@ const sumbitUpdate = async () => {
             .then(async () => {
                 let result = await managerUpdateService(UserData.value, oldData.value.workId);
                 userInfoStore.info.name = UserData.value.name;
+                userInfoStore.info.picture = UserData.value.picture;
                 getUserData()
                 ElMessage({
                     type: 'success ',
@@ -467,7 +470,7 @@ onActivated(() => {
             <el-form-item label="照片">
                 <el-upload :auto-upload="true" :show-file-list="false" action="/api/upload" name="file"
                     :headers="{ 'Authorization': tokenStore.token }" :on-success="uploadSuccess">
-                    <img v-if="UserData.picture" :src="UserData.picture" class="avatar" />
+                    <img v-if="UserData.studentInfo.picture" :src="UserData.studentInfo.picture" class="avatar" />
                     <div v-else> <img :src="defaultPicture2" class="avatar" /> </div>
                 </el-upload>
             </el-form-item>

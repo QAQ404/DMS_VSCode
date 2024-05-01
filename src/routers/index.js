@@ -3,6 +3,7 @@ import { createRouter, createWebHistory, routeLocationKey } from "vue-router";
 import LoginVue from '@/views/Login.vue'
 import LayoutVue from '@/views/Layout.vue'
 import MainVue from '@/views/user/Main.vue'
+import EmailWriteVue from '@/views/user/EmailWrite.vue'
 import UserInfoVue from '@/views/user/UserInfo.vue'
 import BuildingVue from '@/views/building/Building.vue'
 import ManagerVue from '@/views/manager/Manager.vue'
@@ -23,7 +24,8 @@ const routers = [
         path: '/', component: LayoutVue,
         redirect: '/login',
         children: [
-            { path: '/main',name:'main', component: MainVue , meta:{keepAlive:true}},  /* 我的主页 */
+            { path: '/main',name:'main', component: MainVue , meta:{keepAlive:true}},  /* 我的邮箱 */
+            { path: '/main/emailWrite',name:'emailWrite', component: EmailWriteVue , meta:{keepAlive:true}},  /* 写邮箱 */
             { path: '/userInfo', component: UserInfoVue,name:'userInfo', meta:{keepAlive:true} },  /* 我的资料 */
             { path: '/building', component: BuildingVue ,name:'building', meta:{keepAlive:true}},  /* 宿舍楼管理 */
             { path: '/manager', component: ManagerVue ,name:'manager', meta:{keepAlive:true}},    /* 宿管管理 */

@@ -16,3 +16,7 @@ export const userGetInfoService = ()=>{ /* 获取账号基本信息Get */
     return request.get('/user/userInfo')
 }
 
+export const userGetListService = ()=>{
+    return request.get('/user/getUserList')
+}
+

@@ -18,7 +18,6 @@ const getClazzList = async () => {
     let result = await clazzGetClazzListCascaderService();
     clazzList.value = result.data;
 }
-getClazzList()
 
 const AddTableColumn = () => {
     AddStudentList.value.push({ name: '', gender: '男', entranceYear: '2020', studyId: '', password: '123456', clazzId: '' })

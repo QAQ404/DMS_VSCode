@@ -171,7 +171,6 @@ const clearSearchData = () => {
     getApplicationList()
 }
 const getSearchData = () => {
-    console.log(searchData.value);
     getApplicationList();
 }
 /* ------------------------------------------------------------------------------ */

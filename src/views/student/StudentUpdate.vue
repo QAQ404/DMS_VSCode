@@ -18,7 +18,7 @@ const uploadSuccess = (result) => {
     if (result.data === 'big') {
         ElMessage.error('图片大小需小于1MB'); return;
     }
-    UpdateInfoDialogData.value.picture = result.data;
+    studentInfoData.value.studentInfo.picture = result.data;
 }
 
 const nationList = ref([

@@ -1,5 +1,5 @@
 <script setup>
-import { Switch, UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House, Connection, Reading } from '@element-plus/icons-vue'
+import {Message, Switch, UserFilled, SwitchButton, School, Postcard, OfficeBuilding, HomeFilled, User, House, Connection, Reading } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import avatar from '@/assets/default.jpg'
 import { ref } from 'vue'
@@ -76,7 +76,8 @@ getUserInfoMethod();
                     <div>欢迎你，{{ userInfoStore.info.name }}</div>
                     <el-dropdown placement="bottom-end" @command="dropCommand">
                         <span class="e-avatar">
-                            <el-avatar :src="avatar" :size="35" />
+                            <el-avatar v-if="userInfoStore.info.picture" :src="userInfoStore.info.picture" :size="35" />
+                            <el-avatar v-else :src="avatar" :size="35" />
                         </span>
                         <template #dropdown> <!-- 头像下拉菜单的插槽 -->
                             <el-dropdown-menu class="user-select-none">
@@ -167,10 +168,9 @@ getUserInfoMethod();
                             <span>个人中心</span>
                         </template>
                         <el-menu-item index="/main">
-                            <el-space>
-                                <img src="@/assets/主页.png" alt="" width="20">
-                                <span>我的主页</span>
-                            </el-space>
+                                <!-- <img src="@/assets/主页.png" alt="" width="20"> -->
+                                <el-icon><Message/></el-icon>
+                                <span>我的邮箱</span>
                         </el-menu-item>
                         <el-menu-item index="/userInfo">
                             <el-icon>
@@ -261,10 +261,9 @@ getUserInfoMethod();
                             <span>个人中心</span>
                         </template>
                         <el-menu-item index="/main">
-                            <el-space>
-                                <img src="@/assets/主页.png" alt="" width="20">
-                                <span>我的主页</span>
-                            </el-space>
+                                <!-- <img src="@/assets/主页.png" alt="" width="20"> -->
+                                <el-icon><Message/></el-icon>
+                                <span>我的邮箱</span>
                         </el-menu-item>
                         <el-menu-item index="/userInfo">
                             <el-icon>
@@ -356,10 +355,9 @@ getUserInfoMethod();
                             <span>个人中心</span>
                         </template>
                         <el-menu-item index="/main">
-                            <el-space>
-                                <img src="@/assets/主页.png" alt="" width="20">
-                                <span>我的主页</span>
-                            </el-space>
+                                <!-- <img src="@/assets/主页.png" alt="" width="20"> -->
+                                <el-icon><Message/></el-icon>
+                                <span>我的邮箱</span>
                         </el-menu-item>
                         <el-menu-item index="/userInfo">
                             <el-icon>
