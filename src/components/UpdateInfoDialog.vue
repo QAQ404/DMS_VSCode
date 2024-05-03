@@ -101,7 +101,7 @@ const Function = (value) => {
         <div v-else-if="UpdateInfoDialogType === 'manager'"> <!-- 宿管的更新表单 -->
             <el-form :data="UpdateInfoDialogData" inline>
                 <el-form-item label="编号" style="width: 40%;">
-                    <el-input v-model="UpdateInfoDialogData.workId" placeholder="请输入工作编号" />
+                    <el-input v-model="UpdateInfoDialogData.workId" placeholder="请输入工作编号"  disabled/>
                 </el-form-item>
                 <el-form-item label="姓名" style="width: 45%;">
                     <el-input v-model="UpdateInfoDialogData.name" placeholder="请输入姓名" />
@@ -130,7 +130,7 @@ const Function = (value) => {
                 </el-form-item>
             </el-form>
         </div>
-        <div v-else-if="UpdateInfoDialogType === 'dormitory'"> <!-- 宿管的更新表单 -->
+        <div v-else-if="UpdateInfoDialogType === 'dormitory'"> 
             <el-form :data="UpdateInfoDialogData" inline>
                 <el-form-item label="寝室名称" placeholder="请输入寝室名称" style="width: 45%;">
                     <el-input v-model="UpdateInfoDialogData.name" />

@@ -493,7 +493,7 @@ onActivated(() => {
                     class="input-width"></el-input></el-form-item>
             <el-form-item label="账号"><el-input v-model="UserData.username" disabled
                     class="input-width"></el-input></el-form-item>
-            <el-form-item label="工作编号"><el-input v-model="UserData.workId" class="input-width"></el-input></el-form-item>
+            <el-form-item label="工作编号"><el-input v-model="UserData.workId" class="input-width" disabled></el-input></el-form-item>
             <el-form-item label="照片">
                 <el-upload :auto-upload="true" :show-file-list="false" action="/api/upload" name="file"
                     :headers="{ 'Authorization': tokenStore.token }" :on-success="uploadSuccess">

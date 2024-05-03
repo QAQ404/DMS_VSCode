@@ -29,10 +29,10 @@ const getUserList = async () => {
     userList.value = result.data;
 }
 
+import {EmailAddService} from '@/api/email.js'
+
 const qui = ref()
 const sendEmail = () => {
-    console.log(emailData.value);
-    console.log(qui.value);
     ElMessageBox.confirm(
         '是否确认发送',
         '温馨提示',
@@ -43,7 +43,7 @@ const sendEmail = () => {
         }
     )
         .then(async () => {
-                
+            let result = await EmailAddService(emailData.value);
             ElMessage({
                 type: 'success',
                 message: '成功发送',
@@ -94,14 +94,13 @@ onActivated(() => {
         </el-space>
         <div style="margin-top: 5px;">
             <quill-editor theme="snow" ref="qui"
-                :toolbar="[{ 'size': ['small', false, 'large', 'huge'] }, { 'font': [] }, 'strike', 'bold', 'italic', 'underline', { 'color': [] }, { 'background': [] }, { 'align': [] }, { 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }]"
+                :toolbar="['strike', 'bold', 'italic', 'underline', { 'color': [] }, { 'background': [] }, { 'list': 'ordered' }, { 'list': 'bullet' }]"
                 v-model:content="emailData.content" contentType="html" style="height: 280px;">
             </quill-editor>
         </div>
         <div style="margin-top: 5px;">
             <el-button @click="sendEmail" type="primary" :icon="Promotion">发送</el-button>
         </div>
-        <div v-html="emailData.content"></div>
     </el-card>
 </template>
 
