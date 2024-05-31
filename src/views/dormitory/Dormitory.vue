@@ -274,7 +274,6 @@ const AddDetailedDialogFunction = async (value) => {
     let result2 = await dormitoryGetNameListCheckTheSameName(params);
     AddDetailedDialogData4.value = result2.data;
     clearAddDetailedTag()
-
 }
 const AddDetailedTag = () => {
     AddDetailedDialogInputShow.value = true;
@@ -571,7 +570,7 @@ onActivated(() => {
                         该楼栋的最大单元号为{{ AddDetailedDialogData3.unitNumber }}
                     </template>
                     <el-input-number v-model=" AddDetailedDialogData.unitNumber " :min=" 1 "
-                        :max=" AddDetailedDialogData3.unitNumber " />
+                        :max=" AddDetailedDialogData3.unitNumber " @change="AddDetailedDialogFunction(AddDetailedDialogData.buildingId)"/>
                 </el-tooltip>
             </el-form-item>
             <el-form-item label="寝室床位数">
@@ -583,7 +582,7 @@ onActivated(() => {
                         该楼栋的最高层数为{{ AddDetailedDialogData3.floorNumber }}
                     </template>
                     <el-input-number v-model=" AddDetailedDialogData.floorNumber " :min=" 1 "
-                        :max=" AddDetailedDialogData3.floorNumber " />
+                        :max=" AddDetailedDialogData3.floorNumber " @change="AddDetailedDialogFunction(AddDetailedDialogData.buildingId)"/>
                 </el-tooltip>
             </el-form-item>
             <el-form-item label="所在楼栋">

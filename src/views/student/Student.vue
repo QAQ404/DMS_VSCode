@@ -4,7 +4,7 @@ import { ref, provide, onActivated } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getStudentListService, studentDeleteService ,studentUpdateStuClazzService} from '@/api/student.js'
 import { clazzGetClazzListCascaderService } from '@/api/clazz.js'
-import { dormitoryGetDormitoryListCascaderService } from '@/api/dormitory.js'
+import { dormitoryGetDormitoryListCascaderService,dormitoryGetDormitoryListNoDisabledCascaderService } from '@/api/dormitory.js'
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
@@ -19,7 +19,7 @@ const getClazzList = async () => {
 
 const dormitoryList = ref([])
 const getDormitoryList = async () => {
-  let result = await dormitoryGetDormitoryListCascaderService();
+  let result = await dormitoryGetDormitoryListNoDisabledCascaderService();
   dormitoryList.value = result.data;
 }
 

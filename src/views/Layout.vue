@@ -147,7 +147,7 @@ getUserInfoMethod();
                         <el-menu-item index="/institute">
                             <el-space>
                                 <img src="@/assets/学院.png" alt="" width="20">
-                                <span>学院</span>
+                                <span>学院管理</span>
                             </el-space>
                         </el-menu-item>
                         <el-menu-item index="/major">

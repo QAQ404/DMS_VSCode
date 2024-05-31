@@ -31,6 +31,10 @@ export const dormitoryGetDormitoryListCascaderService = ()=>{
     return request.get('/dormitory/getDormitoryListCascader')
 }
 
+export const dormitoryGetDormitoryListNoDisabledCascaderService = ()=>{
+    return request.get('/dormitory/getDormitoryListNoDisabledCascader')
+}
+
 export const dormitoryGetDormitoryBedListCascaderService = ()=>{
     return request.get('/dormitory/getDormitoryBedListCascader')
 }

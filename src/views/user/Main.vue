@@ -105,7 +105,7 @@ onActivated(() => {
         <el-button type="primary" plain @click="SeeEmailWriteVue" :icon="EditPen">写邮件</el-button>
       </div>
     </template>
-
+   
     <el-form :inline="true" :model="searchData" size="small">
       <el-form-item label="">
         <el-radio-group v-model="searchData.show" size="small" @change="showChange">

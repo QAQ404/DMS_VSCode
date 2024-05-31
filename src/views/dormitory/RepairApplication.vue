@@ -229,11 +229,11 @@ onActivated(() => {
                                     </div>
                                 </el-descriptions-item>
                                 <el-descriptions-item v-if="props.row.state>0">
-                                    <template #label> 宿舍回复 </template>
+                                    <template #label> 修理者回复 </template>
                                     <el-input v-model="props.row.managerMessage" :rows="3" type="textarea" disabled />
                                 </el-descriptions-item>
                                 <el-descriptions-item v-if="props.row.state>0">
-                                    <template #label> 宿管姓名 </template>
+                                    <template #label> 修理者姓名 </template>
                                     {{ props.row.managerName }}
                                 </el-descriptions-item>
                             </el-descriptions>
